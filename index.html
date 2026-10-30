@@ -1,0 +1,5204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kartik Goyal — Experimental Portfolio & Universe</title>
+  <meta name="description" content="Personal interactive portfolio of Kartik Goyal — First-Year Undergraduate Student at NST RU. Exploring Mathematics, Computer Science, AI, and Systems.">
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       01. CSS RESETS & DESIGN SYSTEM VARIABLES
+       ========================================================================== */
+    :root {
+      /* Primary RGB Identity */
+      --rgb-red: #FF003C;
+      --rgb-green: #00FF85;
+      --rgb-blue: #007BFF;
+      
+      --rgb-red-glow: rgba(255, 0, 60, 0.35);
+      --rgb-green-glow: rgba(0, 255, 133, 0.35);
+      --rgb-blue-glow: rgba(0, 123, 255, 0.35);
+      
+      /* Surfaces & Backgrounds */
+      --bg-void: #050505;
+      --bg-surface-1: #0A0A0E;
+      --bg-surface-2: #101017;
+      --bg-surface-3: #181822;
+      --glass-bg: rgba(14, 14, 20, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-border-hover: rgba(255, 255, 255, 0.22);
+      
+      /* Typography Colors */
+      --text-primary: #FFFFFF;
+      --text-secondary: #9E9EA8;
+      --text-muted: #5A5A66;
+      --text-highlight: #F4F4F8;
+      
+      /* Fonts */
+      --font-display: 'Syne', -apple-system, sans-serif;
+      --font-body: 'Space Grotesk', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      /* Transitions & Motion */
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.3s var(--ease-out-expo);
+      --transition-slow: 0.6s var(--ease-out-expo);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      line-height: 1.6;
+      selection-background-color: var(--rgb-blue);
+      selection-color: #fff;
+    }
+
+    ::selection {
+      background: rgba(0, 123, 255, 0.4);
+      color: #FFFFFF;
+    }
+
+    /* Ambient Cursor Spotlight */
+    #ambient-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(circle 500px at var(--mouse-x, 50vw) var(--mouse-y, 50vh), 
+        rgba(0, 123, 255, 0.05),
+        rgba(0, 255, 133, 0.025),
+        transparent 70%);
+      transition: opacity 0.5s ease;
+    }
+
+    /* Subtle CRT Scanline Overlay */
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 0, 0, 0.18) 50%,
+        rgba(0, 0, 0, 0.18)
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 998;
+      opacity: 0.35;
+    }
+
+    /* Noise Texture */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 997;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Custom Cursor */
+    .custom-cursor-dot, .custom-cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s ease, width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .custom-cursor-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #FFFFFF;
+      box-shadow: 0 0 8px var(--rgb-blue);
+    }
+
+    .custom-cursor-ring {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(1px);
+    }
+
+    body.cursor-hover .custom-cursor-ring {
+      width: 54px;
+      height: 54px;
+      border-color: var(--rgb-green);
+      background: rgba(0, 255, 133, 0.08);
+      box-shadow: 0 0 16px var(--rgb-green-glow);
+    }
+
+    body.cursor-active .custom-cursor-ring {
+      width: 24px;
+      height: 24px;
+      border-color: var(--rgb-red);
+      background: rgba(255, 0, 60, 0.15);
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .custom-cursor-dot, .custom-cursor-ring {
+        display: none !important;
+      }
+    }
+
+    /* ==========================================================================
+       02. GLOBAL UTILITIES & TYPOGRAPHY
+       ========================================================================== */
+    .container {
+      width: 90%;
+      max-width: 1320px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section {
+      padding: 130px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header {
+      margin-bottom: 60px;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rgb-green);
+      margin-bottom: 16px;
+      padding: 6px 14px;
+      background: rgba(0, 255, 133, 0.06);
+      border: 1px solid rgba(0, 255, 133, 0.2);
+      border-radius: 999px;
+    }
+
+    .section-tag .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--rgb-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--rgb-green);
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
+      max-width: 680px;
+      margin-top: 18px;
+      font-weight: 300;
+    }
+
+    /* RGB Text Accents */
+    .rgb-red { color: var(--rgb-red); text-shadow: 0 0 12px var(--rgb-red-glow); }
+    .rgb-green { color: var(--rgb-green); text-shadow: 0 0 12px var(--rgb-green-glow); }
+    .rgb-blue { color: var(--rgb-blue); text-shadow: 0 0 12px var(--rgb-blue-glow); }
+
+    /* Glass Panels */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 32px;
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    }
+
+    .glass-card:hover {
+      border-color: var(--glass-border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      border: none;
+      transition: all var(--transition-base);
+    }
+
+    .btn-rgb-primary {
+      background: #FFFFFF;
+      color: #050505;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-rgb-primary:hover {
+      background: #FFFFFF;
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 30px var(--rgb-blue-glow), 0 0 45px var(--rgb-green-glow);
+    }
+
+    .btn-rgb-ghost {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-rgb-ghost:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--rgb-blue);
+      color: #FFF;
+      box-shadow: 0 0 20px var(--rgb-blue-glow);
+    }
+
+    /* ==========================================================================
+       03. NAVBAR & STATUS HUD
+       ========================================================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 18px 0;
+      transition: all var(--transition-base);
+      background: rgba(5, 5, 5, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #FFFFFF;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition-base);
+    }
+
+    .brand-badge::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--rgb-red), var(--rgb-green), var(--rgb-blue));
+    }
+
+    .brand-logo:hover .brand-badge {
+      transform: scale(1.05) rotate(3deg);
+      border-color: var(--rgb-blue);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.05em;
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color var(--transition-fast);
+      position: relative;
+      padding: 6px 0;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--rgb-red), var(--rgb-green), var(--rgb-blue));
+      transition: width var(--transition-base);
+    }
+
+    .nav-link:hover {
+      color: #FFFFFF;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Sound Synthesizer UI Toggle */
+    .audio-toggle-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .audio-toggle-btn:hover {
+      border-color: var(--rgb-green);
+      color: #FFFFFF;
+    }
+
+    .audio-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+
+    .audio-bar {
+      width: 2px;
+      background: var(--text-muted);
+      border-radius: 1px;
+      transition: height 0.2s ease, background-color 0.2s ease;
+    }
+
+    .audio-bar:nth-child(1) { height: 4px; }
+    .audio-bar:nth-child(2) { height: 8px; }
+    .audio-bar:nth-child(3) { height: 12px; }
+    .audio-bar:nth-child(4) { height: 6px; }
+
+    .audio-active .audio-bar {
+      background: var(--rgb-green);
+      animation: soundwave 1s infinite ease-in-out;
+    }
+    .audio-active .audio-bar:nth-child(1) { animation-delay: 0.1s; }
+    .audio-active .audio-bar:nth-child(2) { animation-delay: 0.3s; }
+    .audio-active .audio-bar:nth-child(3) { animation-delay: 0.2s; }
+    .audio-active .audio-bar:nth-child(4) { animation-delay: 0.4s; }
+
+    /* Scroll Progress Bar */
+    .scroll-progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--rgb-red), var(--rgb-green), var(--rgb-blue));
+      z-index: 1001;
+      box-shadow: 0 0 10px var(--rgb-blue-glow);
+      transition: width 0.05s linear;
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-btn {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .mobile-menu-btn span {
+      width: 24px;
+      height: 2px;
+      background: #FFF;
+      transition: all 0.3s ease;
+    }
+
+    /* ==========================================================================
+       04. HERO SECTION & 3D UNIVERSE
+       ========================================================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding-top: 100px;
+      padding-bottom: 60px;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: auto;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .hero-pretitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-pretitle .inst-tag {
+      color: var(--rgb-blue);
+      font-weight: 700;
+      text-shadow: 0 0 10px var(--rgb-blue-glow);
+    }
+
+    /* RGB Glitch Split Name */
+    .hero-title-wrap {
+      position: relative;
+      margin: 10px 0 28px;
+      cursor: default;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.2rem, 9.5vw, 8.2rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-block;
+      color: #FFFFFF;
+      user-select: none;
+      text-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Chromatic Aberration Layers */
+    .hero-title::before,
+    .hero-title::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      clip: rect(0, 0, 0, 0);
+      pointer-events: none;
+    }
+
+    .hero-title:hover::before {
+      left: -3px;
+      color: var(--rgb-red);
+      text-shadow: 2px 0 var(--rgb-red);
+      clip: rect(24px, 9999px, 86px, 0);
+      animation: glitch-anim-1 2s infinite linear alternate-reverse;
+    }
+
+    .hero-title:hover::after {
+      left: 3px;
+      color: var(--rgb-blue);
+      text-shadow: -2px 0 var(--rgb-green);
+      clip: rect(65px, 9999px, 120px, 0);
+      animation: glitch-anim-2 2.5s infinite linear alternate-reverse;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: clamp(1.15rem, 2.2vw, 1.75rem);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+      max-width: 760px;
+      margin: 0 auto 36px;
+    }
+
+    .hero-tagline span {
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+
+    /* HUD Metrics Bar */
+    .hero-hud {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 820px;
+      margin: 0 auto 46px;
+    }
+
+    .hud-card {
+      background: rgba(14, 14, 20, 0.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+      backdrop-filter: blur(12px);
+      transition: all var(--transition-base);
+    }
+
+    .hud-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .hud-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-value {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      transition: color var(--transition-fast);
+    }
+
+    .scroll-indicator:hover {
+      color: #FFFFFF;
+    }
+
+    .scroll-mouse {
+      width: 22px;
+      height: 36px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      padding-top: 6px;
+    }
+
+    .scroll-wheel {
+      width: 3px;
+      height: 8px;
+      background: var(--rgb-blue);
+      border-radius: 2px;
+      box-shadow: 0 0 8px var(--rgb-blue);
+      animation: scrollWheel 1.8s infinite ease-in-out;
+    }
+
+    /* ==========================================================================
+       05. SECTION A: THE MIND (CURIOSITY CONSTELLATION)
+       ========================================================================== */
+    .mind-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .mind-narrative {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .mind-lead {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: #FFFFFF;
+      line-height: 1.6;
+    }
+
+    .mind-quote-box {
+      border-left: 3px solid var(--rgb-blue);
+      padding: 16px 22px;
+      background: rgba(0, 123, 255, 0.04);
+      border-radius: 0 12px 12px 0;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: #C0C8E0;
+    }
+
+    .mind-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mind-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .mind-badge.active, .mind-badge:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--rgb-blue);
+      color: #FFF;
+      box-shadow: 0 0 14px var(--rgb-blue-glow);
+    }
+
+    /* Mind Constellation Interactive Canvas / Map */
+    .constellation-wrapper {
+      position: relative;
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .constellation-canvas-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.75;
+    }
+
+    .constellation-overlay {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    .constellation-nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .mind-node-btn {
+      background: rgba(16, 16, 24, 0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .mind-node-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: transparent;
+      border-radius: 14px 0 0 14px;
+      transition: background 0.2s ease;
+    }
+
+    .mind-node-btn:hover, .mind-node-btn.selected {
+      background: rgba(24, 24, 36, 0.9);
+      transform: translateX(4px);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .mind-node-btn[data-topic="math"].selected::after { background: var(--rgb-red); }
+    .mind-node-btn[data-topic="cs"].selected::after { background: var(--rgb-blue); }
+    .mind-node-btn[data-topic="history"].selected::after { background: var(--rgb-green); }
+    .mind-node-btn[data-topic="harmonics"].selected::after { background: #E056FD; }
+
+    .node-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .node-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #FFFFFF;
+    }
+
+    .node-glyph {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+
+    .node-teaser {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Mind Inspector Card (Details) */
+    .mind-inspector {
+      background: rgba(5, 5, 8, 0.92);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 20px;
+      backdrop-filter: blur(16px);
+      margin-top: 14px;
+      min-height: 110px;
+      transition: all var(--transition-base);
+    }
+
+    .inspector-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .inspector-body {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       06. SECTION B: THE THINKING LAB (MATH PLAYGROUND & PUZZLE)
+       ========================================================================== */
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 36px;
+      align-items: stretch;
+    }
+
+    /* Parametric Math Canvas Playground */
+    .math-canvas-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .math-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .math-presets {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .math-preset-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .math-preset-btn.active, .math-preset-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--rgb-blue);
+      color: #FFFFFF;
+      box-shadow: 0 0 12px var(--rgb-blue-glow);
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #020204;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    #math-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .math-hud-overlay {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      pointer-events: none;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      background: rgba(5, 5, 10, 0.7);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .math-controls {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    .slider-input {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--rgb-green);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--rgb-green);
+      transition: transform 0.1s ease;
+    }
+
+    .slider-input::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Math Riddle Interactive Card */
+    .riddle-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .riddle-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--rgb-red);
+      background: rgba(255, 0, 60, 0.08);
+      border: 1px solid rgba(255, 0, 60, 0.25);
+      border-radius: 999px;
+      padding: 4px 12px;
+      margin-bottom: 14px;
+    }
+
+    .riddle-title {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+      line-height: 1.25;
+    }
+
+    .riddle-text {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* Mathematical Gallery CSS loaded below */
+
+    /* ==========================================================================
+       07. SECTION C: SKILL MATRIX (CLI & DYNAMIC WORKSTATIONS)
+       ========================================================================== */
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+    }
+
+    /* Interactive Terminal Simulator */
+    .terminal-card {
+      background: #08080C;
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 480px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .terminal-header {
+      background: #101016;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .terminal-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .dot-close { background: #FF5F56; }
+    .dot-min { background: #FFBD2E; }
+    .dot-max { background: #27C93F; }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .terminal-body {
+      padding: 18px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: #D4D4DC;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .terminal-output {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .terminal-line {
+      word-break: break-all;
+    }
+
+    .terminal-line.success { color: var(--rgb-green); }
+    .terminal-line.error { color: var(--rgb-red); }
+    .terminal-line.info { color: var(--rgb-blue); }
+    .terminal-line.muted { color: var(--text-muted); }
+
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .terminal-prompt {
+      color: var(--rgb-green);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .terminal-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #FFFFFF;
+      flex: 1;
+      caret-color: var(--rgb-green);
+    }
+
+    /* Colour Palette Theory Studio */
+    .color-studio-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .color-display-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      height: 90px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 18px 0;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #000;
+      cursor: pointer;
+      position: relative;
+      transition: flex 0.3s ease;
+    }
+
+    .swatch:hover {
+      flex: 1.5;
+    }
+
+    .swatch span {
+      background: rgba(0, 0, 0, 0.4);
+      color: #FFF;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.6rem;
+      width: fit-content;
+    }
+
+    .color-mode-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .color-mode-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .color-mode-btn.active {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #FFF;
+      color: #FFF;
+    }
+
+    .color-harmony-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .harmony-stat {
+      background: #040406;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .harmony-stat-val {
+      font-weight: 700;
+      color: #FFF;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* Skills Grid Additional (AI, Sales, Civics/History) */
+    .skills-subgrid {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 10px;
+    }
+
+    .skill-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: all var(--transition-base);
+    }
+
+    .skill-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .skill-icon-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .skill-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .skill-icon.ai { background: rgba(0, 123, 255, 0.1); border: 1px solid var(--rgb-blue); color: var(--rgb-blue); }
+    .skill-icon.sales { background: rgba(0, 255, 133, 0.1); border: 1px solid var(--rgb-green); color: var(--rgb-green); }
+    .skill-icon.civics { background: rgba(255, 0, 60, 0.1); border: 1px solid var(--rgb-red); color: var(--rgb-red); }
+
+    .skill-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .skill-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .skill-interactive-preview {
+      background: #050508;
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+
+    /* ==========================================================================
+       08. SECTION D: BEYOND THE SCREEN (INTERACTIVE PASSIONS)
+       ========================================================================== */
+    .hobbies-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .hobby-tab-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+    }
+
+    .hobby-tab-btn.active, .hobby-tab-btn:hover {
+      background: #FFFFFF;
+      color: #050505;
+      font-weight: 600;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .hobby-panel {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .hobby-panel.active {
+      display: block;
+    }
+
+    /* Sub-Module: Cricket Simulator */
+    .cricket-simulator-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .cricket-field-canvas-wrap {
+      position: relative;
+      background: #020604;
+      border: 1px solid rgba(0, 255, 133, 0.2);
+      border-radius: 16px;
+      height: 340px;
+      overflow: hidden;
+    }
+
+    #cricket-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .cricket-controls-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .cricket-scoreboard {
+      background: #050709;
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+
+    .cricket-stat-num {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--rgb-green);
+    }
+
+    .cricket-stat-lbl {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .cricket-action-btn {
+      padding: 16px;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+
+    .cricket-commentary {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--rgb-green);
+      background: rgba(0, 255, 133, 0.06);
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 3px solid var(--rgb-green);
+      min-height: 48px;
+    }
+
+    /* Sub-Module: Voice Modulation & Waveform */
+    .audio-studio-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 32px;
+    }
+
+    .oscilloscope-wrap {
+      background: #030307;
+      border: 1px solid rgba(0, 123, 255, 0.25);
+      border-radius: 16px;
+      height: 320px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #oscilloscope-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .synth-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .waveform-selector {
+      display: flex;
+      gap: 8px;
+    }
+
+    .wave-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition-fast);
+    }
+
+    .wave-btn.active {
+      background: rgba(0, 123, 255, 0.2);
+      border-color: var(--rgb-blue);
+      color: #FFF;
+      box-shadow: 0 0 12px var(--rgb-blue-glow);
+    }
+
+    /* Sub-Module: The Bamboo Flute (Bansuri) Instrument */
+    .flute-instrument-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 36px;
+      text-align: center;
+    }
+
+    .flute-graphic {
+      max-width: 860px;
+      margin: 30px auto;
+      background: linear-gradient(180deg, #7A5330 0%, #B8860B 50%, #5C3D1E 100%);
+      border-radius: 25px;
+      padding: 18px 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      border: 2px solid #D4AF37;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      position: relative;
+    }
+
+    .flute-hole-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #1A1108;
+      border: 3px solid #3D2914;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.9);
+      user-select: none;
+    }
+
+    .flute-hole-btn:hover, .flute-hole-btn.playing {
+      transform: scale(1.15);
+      border-color: #00FF85;
+      background: rgba(0, 255, 133, 0.25);
+      box-shadow: 0 0 20px #00FF85;
+    }
+
+    .note-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #FFFFFF;
+    }
+
+    .note-freq {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* ==========================================================================
+       09. SECTION E: THE CHESS CORNER (PLAYABLE 8x8 & PUZZLE)
+       ========================================================================== */
+    .chess-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .chessboard-wrapper {
+      position: relative;
+      background: #0A0A0E;
+      border: 2px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .chess-board {
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 1;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .chess-square {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .chess-square.light {
+      background: #2A2A36;
+    }
+
+    .chess-square.dark {
+      background: #14141C;
+    }
+
+    .chess-square.selected {
+      background: rgba(0, 123, 255, 0.45) !important;
+      box-shadow: inset 0 0 10px var(--rgb-blue);
+    }
+
+    .chess-square.possible-move::after {
+      content: '';
+      width: 14px;
+      height: 14px;
+      background: rgba(0, 255, 133, 0.7);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--rgb-green);
+    }
+
+    .chess-square.possible-capture {
+      background: rgba(255, 0, 60, 0.35) !important;
+    }
+
+    .chess-piece {
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      line-height: 1;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+      transition: transform 0.15s ease;
+    }
+
+    .chess-piece.white {
+      color: #FFFFFF;
+      text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    }
+
+    .chess-piece.black {
+      color: #0A0A0E;
+      text-shadow: -1px -1px 0 #888, 1px -1px 0 #888, -1px 1px 0 #888, 1px 1px 0 #888;
+    }
+
+    .chess-square:hover .chess-piece {
+      transform: scale(1.12);
+    }
+
+    .chess-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .chess-meta-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .chess-moves-log {
+      max-height: 140px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      background: #050508;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .chess-controls-btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    /* ==========================================================================
+       10. SECTION F: DIGITAL IDENTITY & TRANSMISSION (CONTACT)
+       ========================================================================== */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .identity-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .id-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .id-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--rgb-red), var(--rgb-green), var(--rgb-blue));
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .id-avatar-inner {
+      width: 100%;
+      height: 100%;
+      background: #08080C;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #FFF;
+    }
+
+    .id-name {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #FFF;
+    }
+
+    .id-role {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--rgb-blue);
+      letter-spacing: 0.05em;
+    }
+
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .contact-method-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #06060A;
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .contact-method-item:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      background: #0E0E14;
+      transform: translateX(4px);
+    }
+
+    .method-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .method-icon {
+      font-size: 1.1rem;
+      opacity: 0.7;
+    }
+
+    .method-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .method-value {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #FFF;
+      font-weight: 500;
+    }
+
+    .copy-pill {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      color: var(--text-secondary);
+    }
+
+    /* Transmission Form */
+    .transmission-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 36px;
+    }
+
+    .transmission-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .form-input, .form-textarea {
+      background: #050508;
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #FFFFFF;
+      outline: none;
+      transition: all var(--transition-fast);
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--rgb-blue);
+      box-shadow: 0 0 16px var(--rgb-blue-glow);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #101018;
+      border: 1px solid var(--rgb-green);
+      color: #FFFFFF;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px var(--rgb-green-glow);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 99999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s var(--ease-out-expo);
+      pointer-events: none;
+    }
+
+    .toast-msg.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       11. FOOTER & TELEMETRY
+       ========================================================================== */
+    .footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 60px 0 40px;
+      background: #030305;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-telemetry {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .telemetry-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .telemetry-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--rgb-green);
+      box-shadow: 0 0 6px var(--rgb-green);
+    }
+
+    .back-to-top-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 8px 18px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .back-to-top-btn:hover {
+      border-color: #FFF;
+      color: #FFF;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       12. KEYFRAME ANIMATIONS
+       ========================================================================== */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    @keyframes scrollWheel {
+      0% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(8px); opacity: 0.3; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes soundwave {
+      0%, 100% { height: 4px; }
+      50% { height: 14px; }
+    }
+
+    @keyframes glitch-anim-1 {
+      0% { clip: rect(12px, 9999px, 44px, 0); transform: skew(0.3deg); }
+      20% { clip: rect(65px, 9999px, 80px, 0); transform: skew(-0.5deg); }
+      40% { clip: rect(20px, 9999px, 55px, 0); transform: skew(0.2deg); }
+      60% { clip: rect(82px, 9999px, 110px, 0); transform: skew(-0.3deg); }
+      80% { clip: rect(40px, 9999px, 60px, 0); transform: skew(0.5deg); }
+      100% { clip: rect(10px, 9999px, 35px, 0); transform: skew(0); }
+    }
+
+    @keyframes glitch-anim-2 {
+      0% { clip: rect(85px, 9999px, 130px, 0); transform: skew(-0.4deg); }
+      25% { clip: rect(25px, 9999px, 50px, 0); transform: skew(0.4deg); }
+      50% { clip: rect(95px, 9999px, 120px, 0); transform: skew(-0.2deg); }
+      75% { clip: rect(15px, 9999px, 40px, 0); transform: skew(0.3deg); }
+      100% { clip: rect(70px, 9999px, 105px, 0); transform: skew(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       13. RESPONSIVE DESIGN MEDIA QUERIES
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .mind-layout,
+      .lab-grid,
+      .skills-layout,
+      .chess-layout,
+      .contact-layout,
+      .cricket-simulator-card,
+      .audio-studio-card {
+        grid-template-columns: 1fr;
+      }
+
+      .skills-subgrid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu-btn {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section {
+        padding: 80px 0;
+      }
+
+      .hero-hud {
+        grid-template-columns: 1fr;
+      }
+
+      .constellation-nodes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .math-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .riddle-options {
+        grid-template-columns: 1fr;
+      }
+
+      .color-display-strip {
+        height: 70px;
+      }
+
+      .flute-graphic {
+        flex-wrap: wrap;
+        gap: 12px;
+        border-radius: 16px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+
+    /* Mobile Drawer Menu */
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 74px;
+      left: 0;
+      width: 100%;
+      background: rgba(6, 6, 10, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 24px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 999;
+      transform: translateY(-130%);
+      transition: transform 0.4s var(--ease-out-expo);
+      pointer-events: none;
+    }
+
+    .mobile-nav-drawer.open {
+      transform: translateY(0);
+      pointer-events: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85);
+    }
+
+    .mobile-nav-link {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: color 0.2s ease, padding-left 0.2s ease;
+    }
+
+    .mobile-nav-link:hover {
+      color: #FFFFFF;
+      padding-left: 8px;
+    }
+
+    /* Cricket Timing Meter */
+    .timing-meter-wrap {
+      background: #040508;
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .timing-meter-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .timing-meter-track {
+      position: relative;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .timing-sweet-spot {
+      position: absolute;
+      top: 0;
+      left: 65%;
+      width: 20%;
+      height: 100%;
+      background: rgba(0, 255, 133, 0.45);
+      box-shadow: 0 0 10px var(--rgb-green);
+    }
+
+    .timing-needle {
+      position: absolute;
+      top: 0;
+      left: 0%;
+      width: 4px;
+      height: 100%;
+      background: #FFFFFF;
+      box-shadow: 0 0 8px #FFFFFF;
+      transition: left 0.03s linear;
+    }
+
+    /* Floating Flute Musical Note Animation */
+    .floating-flute-note {
+      position: fixed;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--rgb-green);
+      text-shadow: 0 0 14px var(--rgb-green);
+      pointer-events: none;
+      z-index: 99999;
+      animation: floatNoteUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes floatNoteUp {
+      0% { transform: translate(-50%, 0) scale(0.6); opacity: 1; }
+      100% { transform: translate(-50%, -75px) scale(1.3); opacity: 0; }
+    }
+
+    /* Accessibility: Respect Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  
+    /* ==========================================================================
+       GLITCH COUNTDOWN INTRO & IDENTITY REVEAL STYLES
+       ========================================================================== */
+    body.intro-active {
+      overflow: hidden !important;
+    }
+
+    #glitch-intro-overlay {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #020204;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
+      transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), filter 0.75s ease;
+    }
+
+    #glitch-intro-overlay.dismissed {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.04);
+      filter: blur(10px);
+    }
+
+    .intro-cyber-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(14, 18, 28, 0.6) 0%, #020204 70%);
+      pointer-events: none;
+    }
+
+    .intro-scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* Countdown Stage */
+    .countdown-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      z-index: 10;
+    }
+
+    .countdown-num {
+      font-family: var(--font-display);
+      font-size: clamp(6.5rem, 22vw, 15rem);
+      font-weight: 900;
+      color: #FFFFFF;
+      text-shadow: 0 0 50px rgba(255, 255, 255, 0.35), 4px 0 var(--rgb-red), -4px 0 var(--rgb-blue);
+      letter-spacing: -0.05em;
+      line-height: 1;
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+
+    .countdown-num.active {
+      opacity: 1;
+      transform: scale(1);
+      animation: countdownPulse 0.7s ease-in-out;
+    }
+
+    @keyframes countdownPulse {
+      0% { transform: scale(0.8); opacity: 0; filter: blur(4px); }
+      30% { transform: scale(1.05); opacity: 1; filter: blur(0); text-shadow: 0 0 60px var(--rgb-green), 6px 0 var(--rgb-red), -6px 0 var(--rgb-blue); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Glitch Name Reveal Stage */
+    .intro-name-stage {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+      max-width: 1200px;
+      position: relative;
+      z-index: 10;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .intro-name-stage.active {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Clickable Name Trigger */
+    .interactive-name-trigger {
+      position: relative;
+      cursor: pointer;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 24px;
+      margin-bottom: 8px;
+      transition: transform 0.2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .interactive-name-trigger:hover,
+    .interactive-name-trigger:active {
+      transform: scale(1.03);
+    }
+
+    .interactive-name-text {
+      font-family: var(--font-display);
+      font-size: clamp(3.2rem, 11vw, 9.2rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      position: relative;
+      display: inline-block;
+      text-shadow: 0 0 50px rgba(255, 255, 255, 0.25), 4px 0 var(--rgb-red), -4px 0 var(--rgb-blue);
+      animation: glitchReconstruct 3.5s infinite alternate;
+    }
+
+    .interactive-name-trigger:hover .interactive-name-text,
+    .interactive-name-trigger:active .interactive-name-text {
+      text-shadow: 0 0 60px rgba(0, 255, 133, 0.6), 8px 0 var(--rgb-red), -8px 0 var(--rgb-blue);
+      animation: intenseGlitch 0.2s infinite;
+    }
+
+    /* Reconstruct animation */
+    @keyframes glitchReconstruct {
+      0%, 100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        transform: translate(0);
+      }
+      20% {
+        clip-path: polygon(0 15%, 100% 15%, 100% 45%, 0 45%);
+        transform: translate(-3px, 1px);
+      }
+      22% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        transform: translate(0);
+      }
+      65% {
+        clip-path: polygon(0 60%, 100% 60%, 100% 85%, 0 85%);
+        transform: translate(3px, -1px);
+      }
+      67% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        transform: translate(0);
+      }
+    }
+
+    @keyframes intenseGlitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-4px, 2px); }
+      40% { transform: translate(3px, -2px); }
+      60% { transform: translate(-2px, -2px); }
+      80% { transform: translate(4px, 1px); }
+      100% { transform: translate(0); }
+    }
+
+    /* Click Prompt */
+    .name-click-prompt {
+      font-family: var(--font-mono);
+      font-size: clamp(0.75rem, 1.4vw, 0.95rem);
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      color: var(--rgb-green);
+      text-shadow: 0 0 12px var(--rgb-green);
+      margin-top: 18px;
+      padding: 8px 22px;
+      background: rgba(0, 255, 133, 0.08);
+      border: 1px solid rgba(0, 255, 133, 0.35);
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      animation: pulseClickPrompt 1.8s infinite ease-in-out;
+      transition: all 0.2s ease;
+    }
+
+    .interactive-name-trigger:hover .name-click-prompt,
+    .interactive-name-trigger:active .name-click-prompt {
+      background: rgba(0, 255, 133, 0.22);
+      border-color: var(--rgb-green);
+      box-shadow: 0 0 25px var(--rgb-green-glow);
+      transform: scale(1.05);
+      color: #FFFFFF;
+    }
+
+    @keyframes pulseClickPrompt {
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.04); box-shadow: 0 0 15px var(--rgb-green-glow); }
+    }
+
+    .intro-tagline-text {
+      font-family: var(--font-body);
+      font-size: clamp(1.05rem, 2.2vw, 1.65rem);
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: #C0C0D0;
+      margin-top: 16px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Discreet Skip Option */
+    .intro-discreet-skip {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.6);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+      z-index: 20;
+    }
+
+    .intro-discreet-skip:hover {
+      color: #FFFFFF;
+      border-color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+    }
+
+    /* ==========================================================================
+       THINKING LAB GATEWAY SECTION STYLES
+       ========================================================================== */
+    .thinking-lab-gateway-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 60px 50px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .thinking-lab-gateway-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--rgb-red), var(--rgb-green), var(--rgb-blue));
+    }
+
+    .gateway-features-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+
+    .gateway-feature-pill {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 8px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gateway-cta-btn {
+      font-size: 1rem;
+      padding: 18px 40px;
+    }
+
+/* ==========================================================================
+       MATHEMATICAL BEAUTY PANTHÉON STYLES (REPLACING LOCKER GAME)
+       ========================================================================== */
+    .math-gallery-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .math-equations-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .math-equation-row {
+      background: rgba(14, 14, 20, 0.7);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .math-equation-row:hover, .math-equation-row.selected {
+      background: rgba(20, 20, 32, 0.9);
+      border-color: var(--rgb-blue);
+      transform: translateX(4px);
+      box-shadow: 0 8px 24px -6px var(--rgb-blue-glow);
+    }
+
+    .eq-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .eq-name {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .eq-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .eq-formula-box {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--rgb-green);
+      background: rgba(0, 255, 133, 0.06);
+      border: 1px solid rgba(0, 255, 133, 0.2);
+      padding: 8px 14px;
+      border-radius: 8px;
+      white-space: nowrap;
+      text-shadow: 0 0 10px var(--rgb-green-glow);
+    }
+
+    .math-philosophy-quote {
+      border-left: 3px solid var(--rgb-green);
+      background: rgba(0, 255, 133, 0.04);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #CFEAD8;
+      line-height: 1.5;
+      margin-top: 14px;
+    }
+
+    /* ==========================================================================
+       ELEVATED RGB AUDIO WAVEFORM STYLES
+       ========================================================================== */
+    .oscilloscope-wrap {
+      background: #020205 !important;
+      border: 1px solid rgba(0, 123, 255, 0.35) !important;
+      border-radius: 18px !important;
+      height: 360px !important;
+      position: relative !important;
+      overflow: hidden !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 123, 255, 0.08) !important;
+    }
+
+    .oscilloscope-hud-top {
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .waveform-stat-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      background: rgba(10, 10, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 4px 10px;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(8px);
+    }
+
+    /* ==========================================================================
+       STRATEGIC LOGIC & ART OF CHESS STYLES (REPLACING GAME PLAY)
+       ========================================================================== */
+    .chess-art-display {
+      position: relative;
+      background: #08080C;
+      border: 2px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+    }
+
+    .chess-art-board {
+      width: 100%;
+      max-width: 440px;
+      aspect-ratio: 1;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
+    }
+
+    .chess-strategy-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .strategy-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 18px 22px;
+      transition: all var(--transition-base);
+    }
+
+    .strategy-card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateX(4px);
+    }
+
+    .strategy-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .strategy-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .strategy-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--rgb-blue);
+      letter-spacing: 0.1em;
+    }
+
+    .strategy-body {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       KINEMATICS OF CRICKET STYLES (REPLACING CLICKER GAME)
+       ========================================================================== */
+    .cricket-kinematics-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .kinematics-hud-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .kinematics-metric {
+      background: #040508;
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .metric-val {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--rgb-green);
+      margin-bottom: 2px;
+    }
+
+    .metric-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+
+    /* ==========================================================================
+       FLOATING RGB AUDIO CONTROLLER STYLES
+       ========================================================================== */
+    .floating-audio-ctrl {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      background: rgba(10, 10, 16, 0.84);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+      transition: all var(--transition-base);
+      user-select: none;
+    }
+
+    .floating-audio-ctrl:hover {
+      border-color: rgba(0, 255, 133, 0.4);
+      box-shadow: 0 12px 35px var(--rgb-green-glow);
+    }
+
+    .mini-waveform-box {
+      width: 64px;
+      height: 22px;
+      background: rgba(4, 4, 8, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mini-audio-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .audio-ctrl-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all var(--transition-fast);
+      outline: none;
+    }
+
+    .audio-ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--rgb-green);
+      color: var(--rgb-green);
+      transform: scale(1.08);
+    }
+
+    .audio-ctrl-vol-wrap {
+      display: flex;
+      align-items: center;
+      width: 70px;
+    }
+
+    .audio-vol-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .audio-vol-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--rgb-green);
+      box-shadow: 0 0 8px var(--rgb-green);
+      cursor: pointer;
+    }
+
+    .audio-ctrl-status {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--rgb-green);
+      white-space: nowrap;
+    }
+
+    .intro-audio-prompt {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(5, 5, 8, 0.8);
+      border: 1px solid rgba(0, 255, 133, 0.3);
+      padding: 8px 20px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+      animation: pulseAudioPrompt 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseAudioPrompt {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; color: var(--rgb-green); box-shadow: 0 0 15px var(--rgb-green-glow); }
+    }
+
+    @media (max-width: 600px) {
+      .floating-audio-ctrl {
+        bottom: 16px;
+        left: 16px;
+        padding: 6px 12px;
+        gap: 8px;
+      }
+      .audio-ctrl-vol-wrap {
+        width: 48px;
+      }
+      .audio-ctrl-status {
+        display: none;
+      }
+    }
+
+</style>
+</head>
+<body class="intro-active">
+  <!-- ==========================================================================
+       GLITCH COUNTDOWN INTRO & IDENTITY REVEAL
+       ========================================================================== -->
+  <div id="glitch-intro-overlay">
+    <div class="intro-cyber-bg"></div>
+    <div class="intro-scanlines"></div>
+
+    <!-- Countdown Phase (3 -> 2 -> 1 -> 00) -->
+    <div class="countdown-stage" id="countdown-stage">
+      <div class="countdown-num active" id="countdown-num">3</div>
+    </div>
+
+    <!-- Name Reveal Phase (KARTIK GOYAL) -->
+    <div class="intro-name-stage" id="intro-name-stage">
+      <div class="interactive-name-trigger" id="name-interactive-trigger" role="button" tabindex="0" title="Click to enter portfolio">
+        <h1 class="interactive-name-text" data-text="KARTIK GOYAL">KARTIK GOYAL</h1>
+        <div class="name-click-prompt">
+          <span>[ CLICK TO ENTER ]</span>
+        </div>
+      </div>
+      <p class="intro-tagline-text">"CURIOUS BY NATURE. UNCONVENTIONAL BY DESIGN."</p>
+    </div>
+
+    <!-- Discreet Skip Option -->
+    <button id="intro-skip-btn" class="intro-discreet-skip" aria-label="Skip Intro Animation">
+      <span>SKIP ⏭</span>
+    </button>
+  </div>
+
+  <!-- Ambient Light Follower -->
+  <div id="ambient-glow"></div>
+
+  <!-- CRT Scanline & Grain Texture -->
+  <div class="scanlines"></div>
+  <div class="noise-overlay"></div>
+
+  <!-- Dynamic Cursor -->
+  <div class="custom-cursor-dot" id="cursor-dot"></div>
+  <div class="custom-cursor-ring" id="cursor-ring"></div>
+
+  <!-- Scroll Progress Indicator -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- ==========================================================================
+       NAVBAR
+       ========================================================================== -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#hero" class="brand-logo">
+        <div class="brand-badge">KG</div>
+        <div class="brand-text">
+          <span class="brand-name">KARTIK GOYAL</span>
+          <span class="brand-sub">NST RU // 1ST YEAR UG</span>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#mind" class="nav-link">01 // MIND</a></li>
+        <li><a href="thinking-lab.html" class="nav-link">02 // THINKING LAB</a></li>
+        <li><a href="#skills" class="nav-link">03 // SKILLS</a></li>
+        <li><a href="#passions" class="nav-link">04 // PASSIONS</a></li>
+        <li><a href="#chess" class="nav-link">05 // CHESS</a></li>
+        <li><a href="#contact" class="nav-link">06 // IDENTITY</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Interactive Web Audio Synthesizer Toggle -->
+        <button class="audio-toggle-btn" id="audio-toggle" title="Toggle Interactive Audio Synthesizer">
+          <div class="audio-bars">
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+            <div class="audio-bar"></div>
+          </div>
+          <span id="audio-status-text">AUDIO: OFF</span>
+        </button>
+
+        <!-- Mobile Drawer Toggle -->
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <a href="#mind" class="mobile-nav-link">01 // THE MIND</a>
+    <a href="thinking-lab.html" class="mobile-nav-link">02 // THE THINKING LAB</a>
+    <a href="#skills" class="mobile-nav-link">03 // SKILL MATRIX</a>
+    <a href="#passions" class="mobile-nav-link">04 // BEYOND THE SCREEN</a>
+    <a href="#chess" class="mobile-nav-link">05 // THE CHESS CORNER</a>
+    <a href="#contact" class="mobile-nav-link">06 // DIGITAL IDENTITY</a>
+  </div>
+
+  <!-- ==========================================================================
+       HERO SECTION
+       ========================================================================== -->
+  <header class="hero" id="hero">
+    <!-- 3D Particle Universe Canvas -->
+    <canvas id="hero-canvas"></canvas>
+
+    <div class="container hero-content">
+      <div class="hero-pretitle">
+        <span class="dot"></span>
+        <span>ACADEMIC NEXUS:</span>
+        <span class="inst-tag">NST RU</span>
+        <span>• FIRST-YEAR UNDERGRADUATE</span>
+      </div>
+
+      <div class="hero-title-wrap">
+        <h1 class="hero-title" data-text="KARTIK GOYAL">KARTIK GOYAL</h1>
+      </div>
+
+      <p class="hero-tagline">
+        Curious by nature. <span>Unconventional by design.</span><br>
+        Dissecting the universe through mathematics, computing, and first-principles reasoning.
+      </p>
+
+      <!-- Telemetry HUD Cards -->
+      <div class="hero-hud">
+        <div class="hud-card">
+          <div class="hud-label">
+            <span class="rgb-red">●</span> FOCUS DOMAIN
+          </div>
+          <div class="hud-value">Mathematics & AI Systems</div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-label">
+            <span class="rgb-green">●</span> METHODOLOGY
+          </div>
+          <div class="hud-value">Rigorous Problem-Solving</div>
+        </div>
+
+        <div class="hud-card">
+          <div class="hud-label">
+            <span class="rgb-blue">●</span> PERSPECTIVE
+          </div>
+          <div class="hud-value">Foundational & Inquisitive</div>
+        </div>
+      </div>
+
+      <div class="hero-cta-group">
+        <a href="#mind" class="btn btn-rgb-primary" id="enter-universe-btn">
+          <span>[ ENTER MY UNIVERSE ]</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+
+        <a href="thinking-lab.html" class="btn btn-rgb-ghost">
+          <span>EXPERIMENT IN LAB</span>
+        </a>
+      </div>
+    </div>
+
+    <a href="#mind" class="scroll-indicator" aria-label="Scroll to Section 1">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+      <span>SCROLL TO EXPLORE</span>
+    </a>
+  </header>
+
+  <!-- ==========================================================================
+       SECTION A: THE MIND (INTELLECTUAL IDENTITY & EXPLORATION)
+       ========================================================================== -->
+  <section class="section" id="mind">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="dot"></span>
+          <span>SECTION 01 // INTELLECTUAL MATRIX</span>
+        </div>
+        <h2 class="section-title">THE ARCHITECTURE OF CURIOSITY</h2>
+        <p class="section-desc">
+          I do not view disciplines as walled gardens. Mathematics, computer systems, historical cycles, and acoustics are simply different lenses examining the same underlying reality.
+        </p>
+      </div>
+
+      <div class="mind-layout">
+        <!-- Narrative Column -->
+        <div class="mind-narrative">
+          <p class="mind-lead">
+            As a first-year undergraduate at <strong class="rgb-blue">NST RU</strong>, I am not here to claim mastery. I am here to build rock-solid foundations, ask uncomfortable questions, and immerse myself in difficult problems.
+          </p>
+
+          <div class="mind-quote-box">
+            "Understanding isn't about memorizing the formula—it's about reconstructing why the universe had no other choice but to follow it."
+          </div>
+
+          <p style="color: var(--text-secondary); font-size: 0.95rem;">
+            Whether dissecting the symmetry of a chess opening, modeling acoustic harmonics on a bamboo flute, or calculating probabilities in number theory, the driving force is always the same: <em>relentless inquiry</em>.
+          </p>
+
+          <div class="mind-badges">
+            <span class="mind-badge active" data-filter="all">All Synapses</span>
+            <span class="mind-badge" data-filter="analytical">Analytical</span>
+            <span class="mind-badge" data-filter="systems">Systems & Logic</span>
+            <span class="mind-badge" data-filter="humanities">Humanities & Civics</span>
+          </div>
+        </div>
+
+        <!-- Interactive Constellation Explorer -->
+        <div class="constellation-wrapper">
+          <canvas id="constellation-canvas" class="constellation-canvas-bg"></canvas>
+          
+          <div class="constellation-overlay">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.1em;">
+                INTERACTIVE THOUGHT NETWORK
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--rgb-green);">
+                ACTIVE NODES: 4/4
+              </span>
+            </div>
+
+            <div class="constellation-nodes-grid">
+              <button class="mind-node-btn selected" data-topic="math">
+                <div class="node-header">
+                  <span class="node-title">Pure Mathematics</span>
+                  <span class="node-glyph rgb-red">∑</span
+                </div>
+                <p class="node-teaser">Symmetry, prime distribution, and modular logic.</p>
+              </button>
+
+              <button class="mind-node-btn" data-topic="cs">
+                <div class="node-header">
+                  <span class="node-title">AI & Systems</span>
+                  <span class="node-glyph rgb-blue">λ</span
+                </div>
+                <p class="node-teaser">Demystifying artificial cognition from first principles.</p>
+              </button>
+
+              <button class="mind-node-btn" data-topic="history">
+                <div class="node-header">
+                  <span class="node-title">History & Civics</span>
+                  <span class="node-glyph rgb-green">🏛</span
+                </div>
+                <p class="node-teaser">Institutional governance and geopolitical geography.</p>
+              </button>
+
+              <button class="mind-node-btn" data-topic="harmonics">
+                <div class="node-header">
+                  <span class="node-title">Acoustics & Sound</span>
+                  <span class="node-glyph" style="color: #E056FD;">♫</span
+                </div>
+                <p class="node-teaser">Resonance, breath mechanics, and harmonic intervals.</p>
+              </button>
+            </div>
+
+            <!-- Dynamic Inspector Readout -->
+            <div class="mind-inspector" id="mind-inspector">
+              <div class="inspector-title" id="inspector-title">
+                <span class="rgb-red">●</span> Pure Mathematics: The Supreme Tool
+              </div>
+              <div class="inspector-body" id="inspector-body">
+                Mathematics is not arithmetic calculation; it is the art of rigorous abstraction. I love tackling problems that seem chaotic on the surface but collapse into elegant structures under modular arithmetic, combinatorics, or geometry.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION B: THE THINKING LAB (MATHEMATICAL PLAYGROUND & PUZZLE)
+       ========================================================================== */
+  -->
+  <section class="section" id="thinking-lab-gateway" style="background: #07070B;">
+    <div class="container">
+      <div class="thinking-lab-gateway-card">
+        <div class="section-tag" style="margin-bottom: 14px; color: var(--rgb-green); border-color: rgba(0, 255, 133, 0.3);">
+          <span class="dot"></span>
+          <span>DEDICATED LABORATORY NEXUS</span>
+        </div>
+        <h2 class="section-title" style="margin-bottom: 16px;">THE THINKING LAB</h2>
+        <p class="section-desc" style="max-width: 720px; margin-bottom: 32px; font-size: 1.15rem; color: #D0D0E0;">
+          A space for mathematical curiosity, logical reasoning, and unconventional problem-solving.
+        </p>
+
+        <div class="gateway-features-strip">
+          <div class="gateway-feature-pill">
+            <span class="rgb-green">●</span> Parametric Coordinate Engine
+          </div>
+          <div class="gateway-feature-pill">
+            <span class="rgb-blue">●</span> Panthéon of Mathematical Beauty
+          </div>
+          <div class="gateway-feature-pill">
+            <span class="rgb-red">●</span> The Number Hunt (Logic Game)
+          </div>
+        </div>
+
+        <a href="thinking-lab.html" class="btn btn-rgb-primary gateway-cta-btn">
+          <span>[ EXPLORE THINKING LAB ]</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION C: SKILL MATRIX (CLI & PRACTICAL PROFICIENCIES)
+       ========================================================================== -->
+  <section class="section" id="skills">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="dot"></span>
+          <span>SECTION 03 // SKILL MATRIX</span>
+        </div>
+        <h2 class="section-title">FUNCTIONAL PROFICIENCIES</h2>
+        <p class="section-desc">
+          Honest, grounded capabilities. No inflated titles or fabricated seniority. Explore my command-line environment, color theory workbench, and multidisciplinary foundations.
+        </p>
+      </div>
+
+      <div class="skills-layout">
+        <!-- Interactive CLI Terminal Simulator -->
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <div class="terminal-dot dot-close"></div>
+              <div class="terminal-dot dot-min"></div>
+              <div class="terminal-dot dot-max"></div>
+            </div>
+            <div class="terminal-title">kartik@nstru-lab: ~ (zsh)</div>
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--rgb-green);">LIVE CLI</div>
+          </div>
+
+          <div class="terminal-body" id="terminal-body">
+            <div class="terminal-output" id="terminal-output">
+              <div class="terminal-line info">Welcome to Kartik Goyal's Interactive Terminal v1.2</div>
+              <div class="terminal-line muted">Institution: NST RU | Status: First-Year Undergraduate</div>
+              <div class="terminal-line">Type <span class="rgb-green">'help'</span> to see available commands or <span class="rgb-blue">'skills'</span> to inspect proficiencies.</div>
+            </div>
+
+            <div class="terminal-input-row">
+              <span class="terminal-prompt">kartik@nstru:~$</span>
+              <input type="text" class="terminal-input" id="terminal-input" autocomplete="off" spellcheck="false" placeholder="Type a command...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Colour Palette Theory Studio -->
+        <div class="color-studio-card">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: #FFF;">
+                COLOUR PALETTE & HARMONY ENGINE
+              </span>
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--rgb-red);">
+                COLOR THEORY
+              </span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px;">
+              Understanding wavelengths, contrast ratios, and emotional psychology. Click swatches to copy hex values.
+            </p>
+
+            <div class="color-mode-tabs">
+              <button class="color-mode-btn active" data-harmony="triadic">RGB Triadic</button>
+              <button class="color-mode-btn" data-harmony="analogous">Analogous</button>
+              <button class="color-mode-btn" data-harmony="complementary">Complementary</button>
+              <button class="color-mode-btn" data-harmony="cyber">Cyber Obsidian</button>
+            </div>
+
+            <!-- Dynamic Swatches -->
+            <div class="color-display-strip" id="color-palette-strip">
+              <div class="swatch" style="background: #FF003C;" data-hex="#FF003C"><span>#FF003C</span></div>
+              <div class="swatch" style="background: #00FF85;" data-hex="#00FF85"><span>#00FF85</span></div>
+              <div class="swatch" style="background: #007BFF;" data-hex="#007BFF"><span>#007BFF</span></div>
+              <div class="swatch" style="background: #0A0A0E;" data-hex="#0A0A0E"><span style="color:#FFF;">#0A0A0E</span></div>
+              <div class="swatch" style="background: #FFFFFF;" data-hex="#FFFFFF"><span>#FFFFFF</span></div>
+            </div>
+          </div>
+
+          <!-- Color Theory Sliders -->
+          <div>
+            <div class="slider-group" style="margin-bottom: 12px;">
+              <div class="slider-label">
+                <span>BASE HUE ROTATION</span>
+                <span id="val-color-hue" class="rgb-blue">210°</span>
+              </div>
+              <input type="range" min="0" max="360" value="210" class="slider-input" id="slider-color-hue">
+            </div>
+
+            <div class="color-harmony-meta">
+              <div class="harmony-stat">
+                <span style="color: var(--text-muted); font-size: 0.65rem;">WCAG CONTRAST RATIO</span>
+                <span class="harmony-stat-val rgb-green" id="contrast-ratio-val">12.8 : 1 (AAA)</span>
+              </div>
+
+              <div class="harmony-stat">
+                <span style="color: var(--text-muted); font-size: 0.65rem;">PSYCHOLOGICAL WEIGHT</span>
+                <span class="harmony-stat-val" id="color-psych-val">High Energy / Trust</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Sub-Cards for Remaining Skills -->
+        <div class="skills-subgrid">
+          <!-- Basic Systems and AI -->
+          <div class="skill-card">
+            <div class="skill-icon-bar">
+              <div class="skill-icon ai">λ</div>
+              <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--rgb-blue);">FOUNDATIONS</span>
+            </div>
+            <h3 class="skill-name">Basic Systems & AI</h3>
+            <p class="skill-desc">
+              Understanding foundational compute paradigms, neural activation mechanics (weights, biases, loss gradients), and high-level system flow without false pretenses of senior engineering.
+            </p>
+            <div class="skill-interactive-preview">
+              <span>● Status: Building mathematical foundations in linear algebra & calculus.</span>
+            </div>
+          </div>
+
+          <!-- Sales & Client Communication Experience -->
+          <div class="skill-card">
+            <div class="skill-icon-bar">
+              <div class="skill-icon sales">◈</div>
+              <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--rgb-green);">COMMUNICATION</span>
+            </div>
+            <h3 class="skill-name">Sales Experience</h3>
+            <p class="skill-desc">
+              Real experience in client interaction, identifying genuine customer friction points, framing value propositions, and practicing active, empathetic listening to reach mutual alignment.
+            </p>
+            <div class="skill-interactive-preview">
+              <span>● Core Principle: True sales is problem discovery, not persuasion pressure.</span>
+            </div>
+          </div>
+
+          <!-- History, Geography & Civics -->
+          <div class="skill-card">
+            <div class="skill-icon-bar">
+              <div class="skill-icon civics">☵</div>
+              <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--rgb-red);">HUMANITIES</span>
+            </div>
+            <h3 class="skill-name">History, Geography & Civics</h3>
+            <p class="skill-desc">
+              Vast historical context spanning civilization trajectories, geographical choke points dictating trade, and structural constitutional principles governing societies.
+            </p>
+            <div class="skill-interactive-preview">
+              <span>● Synthesis: Geography sets the stage; history charts the human response.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION D: BEYOND THE SCREEN (INTERACTIVE HOBBIES & PASSIONS)
+       ========================================================================== -->
+  <section class="section" id="passions" style="background: #06060A;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="dot"></span>
+          <span>SECTION 04 // BEYOND THE SCREEN</span>
+        </div>
+        <h2 class="section-title">THE ANALOG & ACOUSTIC UNIVERSE</h2>
+        <p class="section-desc">
+          True curiosity does not stop at the monitor. Test my cricket timing simulator, sculpt harmonic waveforms in the audio lab, or play acoustic melodies on the bamboo flute.
+        </p>
+      </div>
+
+      <!-- Hobby Selector Tabs -->
+      <div class="hobbies-tabs">
+        <button class="hobby-tab-btn" data-tab="cricket">
+          <span>🏏</span> Cricket Timing Sim
+        </button>
+        <button class="hobby-tab-btn active" data-tab="audio">
+          <span>🎙</span> Voice Modulation & Synth
+        </button>
+        <button class="hobby-tab-btn" data-tab="flute">
+          <span>🪈</span> Bamboo Flute (Bansuri)
+        </button>
+      </div>
+
+      <!-- Tab 1: Cricket Timing Simulator -->
+      <div class="hobby-panel" id="panel-cricket">
+        <div class="cricket-kinematics-card">
+          <div class="cricket-field-canvas-wrap">
+            <canvas id="cricket-canvas"></canvas>
+          </div>
+
+          <div>
+            <div class="section-tag" style="margin-bottom: 8px;">PHYSICS & FLUID DYNAMICS</div>
+            <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: #FFF; margin-bottom: 10px;">
+              Kinematics & Aerodynamics of Cricket
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">
+              Cricket is applied fluid dynamics: the seam angle creates asymmetric boundary layers, generating conventional and reverse swing via the Magnus effect.
+            </p>
+
+            <div class="kinematics-hud-grid">
+              <div class="kinematics-metric">
+                <div class="metric-val">142 km/h</div>
+                <div class="metric-label">DELIVERY VELOCITY</div>
+              </div>
+
+              <div class="kinematics-metric">
+                <div class="metric-val">0.38 s</div>
+                <div class="metric-label">HUMAN REACTION WINDOW</div>
+              </div>
+
+              <div class="kinematics-metric">
+                <div class="metric-val">2,400 RPM</div>
+                <div class="metric-label">SEAM GYROSCOPIC SPIN</div>
+              </div>
+
+              <div class="kinematics-metric">
+                <div class="metric-val">3.2° L-R</div>
+                <div class="metric-label">AERODYNAMIC SWING DEVIATION</div>
+              </div>
+            </div>
+
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--rgb-green); background: rgba(0, 255, 133, 0.06); padding: 12px; border-radius: 8px; border-left: 3px solid var(--rgb-green); margin-top: 16px;">
+              ● Aerodynamic Invariant: Smooth laminar flow on the polished hemisphere coupled with turbulent separation on the rough hemisphere generates continuous lateral pressure differential.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Live Voice Modulation & Audio Waveform -->
+      <div class="hobby-panel active" id="panel-audio">
+        <div class="audio-studio-card">
+          <div class="oscilloscope-wrap">
+            <canvas id="oscilloscope-canvas"></canvas>
+            <div class="oscilloscope-hud-top">
+              <span class="waveform-stat-pill"><span class="rgb-green">●</span> RGB HARMONIC OSCILLOSCOPE</span>
+              <span class="waveform-stat-pill" id="waveform-freq-pill">FREQ: 440 HZ</span>
+              <span class="waveform-stat-pill" style="color: var(--rgb-blue);">STEREO 48kHz</span>
+            </div>
+            <div style="position: absolute; bottom: 12px; left: 18px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); z-index: 5;">
+              LIVE OSCILLOSCOPE & FREQUENCY SPECTRUM
+            </div>
+          </div>
+
+          <div class="synth-controls">
+            <div>
+              <span class="section-tag" style="margin-bottom: 8px;">ACOUSTIC PHYSICS</span>
+              <h3 style="font-family: var(--font-display); font-size: 1.4rem; color: #FFF; margin-bottom: 8px;">
+                Voice Modulation & Harmonic Synthesizer
+              </h3>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                Explore vocal resonance and carrier frequencies. Test synthetic oscillators or capture your voice through live microphone modulation!
+              </p>
+            </div>
+
+            <div class="waveform-selector">
+              <button class="wave-btn active" data-wave="sine">Sine</button>
+              <button class="wave-btn" data-wave="triangle">Triangle</button>
+              <button class="wave-btn" data-wave="sawtooth">Sawtooth</button>
+              <button class="wave-btn" data-wave="square">Square</button>
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>OSCILLATOR FREQUENCY</span>
+                <span id="synth-freq-val" class="rgb-blue">440 Hz (Concert A)</span>
+              </div>
+              <input type="range" min="120" max="880" value="440" class="slider-input" id="slider-synth-freq">
+            </div>
+
+            <div class="slider-group">
+              <div class="slider-label">
+                <span>VIBRATO / MODULATION DEPTH</span>
+                <span id="synth-vib-val" class="rgb-green">5.0 Hz</span>
+              </div>
+              <input type="range" min="0" max="15" step="0.5" value="5" class="slider-input" id="slider-synth-vib">
+            </div>
+
+            <div style="display:flex; gap: 10px;">
+              <button class="btn btn-rgb-primary" id="btn-play-tone" style="flex: 1; padding: 12px;">
+                <span>TRIGGER TONE</span>
+              </button>
+              <button class="btn btn-rgb-ghost" id="btn-toggle-mic" style="flex: 1; padding: 12px;">
+                <span>ENABLE MIC</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: The Bamboo Flute (Bansuri) Virtual Instrument -->
+      <div class="hobby-panel" id="panel-flute">
+        <div class="flute-instrument-card">
+          <span class="section-tag">TRADITIONAL INDIAN ACOUSTICS</span>
+          <h3 style="font-family: var(--font-display); font-size: 1.8rem; color: #FFF; margin-top: 8px;">
+            The Bamboo Flute (Bansuri)
+          </h3>
+          <p style="font-size: 0.95rem; color: var(--text-secondary); max-width: 680px; margin: 10px auto 20px;">
+            Playing the bansuri requires breath control and acoustic harmonics. Click any hole or press keys [1-7] on your keyboard to synthesize genuine resonant overtones.
+          </p>
+
+          <!-- Flute Body & Holes -->
+          <div class="flute-graphic">
+            <div class="flute-hole-btn" data-note="Sa" data-freq="261.63" data-key="1">
+              <span class="note-name">Sa</span>
+              <span class="note-freq">261 Hz</span>
+            </div>
+
+            <div class="flute-hole-btn" data-note="Re" data-freq="293.66" data-key="2">
+              <span class="note-name">Re</span>
+              <span class="note-freq">294 Hz</span>
+            </div>
+
+            <div class="flute-hole-btn" data-note="Ga" data-freq="329.63" data-key="3">
+              <span class="note-name">Ga</span>
+              <span class="note-freq">330 Hz</span>
+            </div>
+
+            <div class="flute-hole-btn" data-note="Ma" data-freq="369.99" data-key="4">
+              <span class="note-name">Ma</span>
+              <span class="note-freq">370 Hz</span>
+            </div>
+
+            <div class="flute-hole-btn" data-note="Pa" data-freq="392.00" data-key="5">
+              <span class="note-name">Pa</span>
+              <span class="note-freq">392 Hz</span>
+            </div>
+
+            <div class="flute-hole-btn" data-note="Dha" data-freq="440.00" data-key="6">
+              <span class="note-name">Dha</span>
+              <span class="note-freq">440 Hz</span>
+            </div>
+
+            <div class="flute-hole-btn" data-note="Ni" data-freq="493.88" data-key="7">
+              <span class="note-name">Ni</span>
+              <span class="note-freq">494 Hz</span>
+            </div>
+          </div>
+
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); margin-top: 10px;">
+            HINT: Press keyboard numbers <strong>1, 2, 3, 4, 5, 6, 7</strong> for quick playing.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION E: THE CHESS CORNER (FUNCTIONAL 8x8 & TACTICAL PUZZLE)
+       ========================================================================== -->
+  <section class="section" id="chess">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="dot"></span>
+          <span>SECTION 05 // STRATEGIC LOGIC</span>
+        </div>
+        <h2 class="section-title">THE ART OF STRATEGIC GEOMETRY</h2>
+        <p class="section-desc">
+          Chess as an intellectual art form: the dialectic between time and force, spatial dominance, and deep prophylactic calculation.
+        </p>
+      </div>
+
+      <div class="chess-layout">
+        <!-- Aesthetic Showcase Chessboard -->
+        <div class="chess-art-display">
+          <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--rgb-blue); font-weight: 700;">
+              TACTICAL VECTORS: THE GREEK GIFT BREAKTHROUGH
+            </span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--rgb-green);">
+              DECISIVE INITIATIVE
+            </span>
+          </div>
+
+          <div class="chess-art-board" id="chess-art-board">
+            <!-- Dynamically populated luxury 64 squares displaying iconic position -->
+          </div>
+
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 14px; text-align: center;">
+            Position: White delivers the decisive Queen sacrifice to break Black's king-side defense.
+          </div>
+        </div>
+
+        <!-- Strategic Principles Matrix -->
+        <div class="chess-strategy-cards">
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <span class="strategy-title">Tempo vs Material</span>
+              <span class="strategy-tag">DYNAMICS</span>
+            </div>
+            <p class="strategy-body">
+              Time on the board is irreversible. Sacrificing piece material to gain development tempo accelerates kinetic attack vectors faster than defensive consolidation can react.
+            </p>
+          </div>
+
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <span class="strategy-title">Prophylaxis & Anticipation</span>
+              <span class="strategy-tag">PREVENTION</span>
+            </div>
+            <p class="strategy-body">
+              Aron Nimzowitsch's doctrine: the highest tactical mastery is not attacking, but neutralizing the opponent's counter-threats before they even manifest on the board.
+            </p>
+          </div>
+
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <span class="strategy-title">Pawn Architecture</span>
+              <span class="strategy-tag">TOPOGRAPHY</span>
+            </div>
+            <p class="strategy-body">
+              Pawns are the soul of chess. The pawn skeleton dictates which files are open for rooks, which squares serve as immutable knight outposts, and whether the endgame is won.
+            </p>
+          </div>
+
+          <div class="strategy-card">
+            <div class="strategy-header">
+              <span class="strategy-title">Minimax vs Intuition</span>
+              <span class="strategy-tag">COGNITION</span>
+            </div>
+            <p class="strategy-body">
+              Contrasting brute-force tree search algorithms with human biological chunking: evaluating positions through aesthetic harmony rather than exhaustive calculation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECTION F: DIGITAL IDENTITY & TRANSMISSION (CONTACT)
+       ========================================================================== -->
+  <section class="section" id="contact" style="background: #040407;">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="dot"></span>
+          <span>SECTION 06 // TRANSMISSION</span>
+        </div>
+        <h2 class="section-title">THE DIGITAL IDENTITY</h2>
+        <p class="section-desc">
+          Ready to discuss mathematical conjectures, complex systems, or innovative ideas? Transmit a message directly into my terminal.
+        </p>
+      </div>
+
+      <div class="contact-layout">
+        <!-- Identity Dossier Card -->
+        <div class="identity-card">
+          <div class="id-header">
+            <div class="id-avatar">
+              <div class="id-avatar-inner">KG</div>
+            </div>
+            <div>
+              <h3 class="id-name">Kartik Goyal</h3>
+              <div class="id-role">FIRST-YEAR UNDERGRADUATE // NST RU</div>
+            </div>
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+            Currently immersed in undergraduate studies at <strong>NST RU</strong>. Passionate about solving difficult mathematical puzzles, building foundational software systems, and exploring interdisciplinary domains.
+          </p>
+
+          <div class="contact-methods">
+            <!-- Email -->
+            <div class="contact-method-item" id="copy-email-card" data-copy="kartik.goyal.official@example.com">
+              <div class="method-left">
+                <span class="method-icon">✉</span>
+                <div>
+                  <div class="method-label">OFFICIAL EMAIL</div>
+                  <div class="method-value">kartik.goyal@example.com</div>
+                </div>
+              </div>
+              <span class="copy-pill">CLICK TO COPY</span>
+            </div>
+
+            <!-- GitHub Placeholder -->
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="contact-method-item">
+              <div class="method-left">
+                <span class="method-icon">⌥</span>
+                <div>
+                  <div class="method-label">GITHUB REPOSITORY</div>
+                  <div class="method-value">github.com/kartikgoyal-dev</div>
+                </div>
+              </div>
+              <span class="copy-pill">VISIT ↗</span>
+            </a>
+
+            <!-- LinkedIn Placeholder -->
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="contact-method-item">
+              <div class="method-left">
+                <span class="method-icon">◈</span>
+                <div>
+                  <div class="method-label">LINKEDIN PROFESSIONAL</div>
+                  <div class="method-value">linkedin.com/in/kartikgoyal-nstru</div>
+                </div>
+              </div>
+              <span class="copy-pill">CONNECT ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Direct Transmission Form -->
+        <div class="transmission-card">
+          <form class="transmission-form" id="transmission-form">
+            <div class="form-group">
+              <label class="form-label" for="sender-name">Transmitter Name</label>
+              <input type="text" id="sender-name" class="form-input" placeholder="e.g. Dr. Alan Turing" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sender-email">Return Frequency / Email</label>
+              <input type="email" id="sender-email" class="form-input" placeholder="alan@bletchley.org" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="message-content">Encrypted Transmission Content</label>
+              <textarea id="message-content" class="form-textarea" placeholder="State your inquiry, challenging problem, or idea..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-rgb-primary" id="btn-submit-transmission">
+              <span>BROADCAST TRANSMISSION</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER & TELEMETRY
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <span style="font-weight: 700; color: #FFF;">KARTIK GOYAL</span> &copy; 2026. All intellectual rights reserved.
+      </div>
+
+      <div class="footer-telemetry">
+        <div class="telemetry-item">
+          <span class="telemetry-dot"></span>
+          <span>CAMPUS: NST RU</span>
+        </div>
+        <div class="telemetry-item">
+          <span>COORDINATES: RGB UNIVERSE</span>
+        </div>
+        <div class="telemetry-item" id="footer-utc-clock">
+          UTC 00:00:00
+        </div>
+      </div>
+
+      <a href="#hero" class="back-to-top-btn" id="btn-back-to-top">
+        <span>▲ BACK TO TOP</span>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Element -->
+  <div class="toast-msg" id="toast-msg">
+    <span id="toast-icon">✓</span>
+    <span id="toast-text">Action completed successfully.</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC ENGINE
+       ========================================================================== -->
+  <script>
+    
+    /* ==========================================================================
+       CINEMATIC SOUNDTRACK & AMBIENT MUSIC ENGINE (WEB AUDIO API)
+       ========================================================================== */
+    class CinematicSoundtrackEngine {
+      constructor() {
+        this.ctx = null;
+        this.analyser = null;
+        this.masterGain = null;
+        this.musicGain = null;
+        this.sfxGain = null;
+
+        this.isPlaying = false;
+        this.isMuted = false;
+        this.volume = 0.14; // Default ambient volume (14%)
+        this.mode = 'ambient'; // 'intro' or 'ambient'
+
+        // Sequencer Clock & State
+        this.tempo = 118; // BPM
+        this.step = 0;
+        this.totalSteps = 64; // 4-bar loop of 16th notes
+        this.nextNoteTime = 0;
+        this.timerID = null;
+
+        // Frequencies (D Minor / Cyberpunk Modal Scale)
+        this.bassNotes = [
+          36.71, 36.71, 73.42, 36.71, 43.65, 36.71, 49.00, 36.71,
+          55.00, 36.71, 65.41, 55.00, 49.00, 43.65, 36.71, 73.42,
+          29.14, 29.14, 58.27, 29.14, 36.71, 29.14, 43.65, 29.14,
+          43.65, 29.14, 49.00, 43.65, 36.71, 32.70, 29.14, 58.27,
+          43.65, 43.65, 87.31, 43.65, 55.00, 43.65, 65.41, 43.65,
+          65.41, 43.65, 73.42, 65.41, 55.00, 49.00, 43.65, 87.31,
+          32.70, 32.70, 65.41, 32.70, 36.71, 32.70, 43.65, 32.70,
+          49.00, 32.70, 55.00, 49.00, 43.65, 36.71, 32.70, 65.41
+        ];
+
+        this.leadNotes = [
+          220.00, 0, 261.63, 0, 293.66, 0, 349.23, 0,
+          329.63, 0, 293.66, 0, 261.63, 293.66, 220.00, 0,
+          174.61, 0, 220.00, 0, 261.63, 0, 293.66, 0,
+          349.23, 0, 392.00, 0, 329.63, 0, 261.63, 0,
+          261.63, 0, 329.63, 0, 349.23, 0, 440.00, 0,
+          392.00, 0, 349.23, 0, 329.63, 0, 293.66, 0,
+          196.00, 0, 261.63, 0, 329.63, 0, 293.66, 0,
+          261.63, 0, 220.00, 0, 196.00, 0, 220.00, 0
+        ];
+
+        // Retrieve user preferences
+        try {
+          const savedVol = localStorage.getItem('portfolio_audio_vol');
+          if (savedVol !== null) this.volume = parseFloat(savedVol);
+          const savedMute = localStorage.getItem('portfolio_audio_muted');
+          if (savedMute !== null) this.isMuted = savedMute === 'true';
+          const savedStep = sessionStorage.getItem('portfolio_music_step');
+          if (savedStep !== null) this.step = parseInt(savedStep) % this.totalSteps;
+        } catch (e) {}
+      }
+
+      initContext() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+            this.analyser = this.ctx.createAnalyser();
+            this.analyser.fftSize = 256;
+            this.analyser.smoothingTimeConstant = 0.82;
+
+            this.masterGain = this.ctx.createGain();
+            this.musicGain = this.ctx.createGain();
+            this.sfxGain = this.ctx.createGain();
+
+            this.musicGain.connect(this.masterGain);
+            this.sfxGain.connect(this.masterGain);
+            this.masterGain.connect(this.analyser);
+            this.analyser.connect(this.ctx.destination);
+
+            this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
+            this.musicGain.gain.setValueAtTime(this.mode === 'intro' ? 0.70 : this.volume, this.ctx.currentTime);
+            this.sfxGain.gain.setValueAtTime(0.85, this.ctx.currentTime);
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      start(mode = 'ambient') {
+        this.initContext();
+        if (!this.ctx) return;
+        this.mode = mode;
+        this.isPlaying = true;
+
+        const targetVol = mode === 'intro' ? 0.70 : this.volume;
+        this.musicGain.gain.setValueAtTime(targetVol, this.ctx.currentTime);
+
+        if (!this.timerID) {
+          this.nextNoteTime = this.ctx.currentTime + 0.05;
+          this.timerID = setInterval(() => this.scheduler(), 25);
+        }
+
+        // If intro mode, trigger rising electronic sweep
+        if (mode === 'intro') {
+          this.playIntroRiser();
+        }
+
+        this.updateUI();
+      }
+
+      scheduler() {
+        if (!this.ctx || !this.isPlaying) return;
+        while (this.nextNoteTime < this.ctx.currentTime + 0.12) {
+          this.playStep(this.nextNoteTime);
+          this.step = (this.step + 1) % this.totalSteps;
+          try {
+            sessionStorage.setItem('portfolio_music_step', this.step);
+          } catch (e) {}
+          this.nextNoteTime += 0.125; // 16th note at 120 BPM
+        }
+      }
+
+      playStep(time) {
+        // 1. Bassline (Pulse Synth)
+        const bassFreq = this.bassNotes[this.step];
+        if (bassFreq > 0) {
+          const osc = this.ctx.createOscillator();
+          const filter = this.ctx.createBiquadFilter();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(bassFreq, time);
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(this.mode === 'intro' ? 380 : 240, time);
+          filter.frequency.exponentialRampToValueAtTime(70, time + 0.1);
+
+          gain.gain.setValueAtTime(0.24, time);
+          gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
+
+          osc.connect(filter);
+          filter.connect(gain);
+          gain.connect(this.musicGain);
+
+          osc.start(time);
+          osc.stop(time + 0.12);
+        }
+
+        // 2. Lead Arpeggio Melody
+        const leadFreq = this.leadNotes[this.step];
+        if (leadFreq > 0) {
+          const lOsc = this.ctx.createOscillator();
+          const lGain = this.ctx.createGain();
+          const lFilter = this.ctx.createBiquadFilter();
+
+          lOsc.type = 'triangle';
+          lOsc.frequency.setValueAtTime(leadFreq, time);
+
+          lFilter.type = 'bandpass';
+          lFilter.frequency.setValueAtTime(leadFreq * 1.5, time);
+
+          lGain.gain.setValueAtTime(0.001, time);
+          lGain.gain.linearRampToValueAtTime(0.12, time + 0.02);
+          lGain.gain.exponentialRampToValueAtTime(0.001, time + 0.22);
+
+          lOsc.connect(lFilter);
+          lFilter.connect(lGain);
+          lGain.connect(this.musicGain);
+
+          lOsc.start(time);
+          lOsc.stop(time + 0.22);
+        }
+
+        // 3. Sustained Pad on bar downbeats (every 16 steps)
+        if (this.step % 16 === 0) {
+          const padRoot = [73.42, 58.27, 87.31, 65.41][Math.floor(this.step / 16)];
+          this.playPadChord(padRoot, time, 1.95);
+        }
+      }
+
+      playPadChord(rootFreq, time, duration) {
+        const chord = [rootFreq, rootFreq * 1.5, rootFreq * 2.0]; // Root, 5th, Octave
+        chord.forEach((f, idx) => {
+          const pOsc = this.ctx.createOscillator();
+          const pGain = this.ctx.createGain();
+          const pFilter = this.ctx.createBiquadFilter();
+
+          pOsc.type = idx === 0 ? 'sawtooth' : 'sine';
+          pOsc.frequency.setValueAtTime(f, time);
+
+          pFilter.type = 'lowpass';
+          pFilter.frequency.setValueAtTime(260, time);
+          pFilter.frequency.linearRampToValueAtTime(420, time + duration * 0.5);
+          pFilter.frequency.linearRampToValueAtTime(220, time + duration);
+
+          pGain.gain.setValueAtTime(0.001, time);
+          pGain.gain.linearRampToValueAtTime(0.06, time + 0.4);
+          pGain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+
+          pOsc.connect(pFilter);
+          pFilter.connect(pGain);
+          pGain.connect(this.musicGain);
+
+          pOsc.start(time);
+          pOsc.stop(time + duration);
+        });
+      }
+
+      playIntroRiser() {
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const rOsc = this.ctx.createOscillator();
+          const rGain = this.ctx.createGain();
+          const rFilter = this.ctx.createBiquadFilter();
+
+          rOsc.type = 'sawtooth';
+          rOsc.frequency.setValueAtTime(55, now);
+          rOsc.frequency.exponentialRampToValueAtTime(440, now + 3.0);
+
+          rFilter.type = 'lowpass';
+          rFilter.frequency.setValueAtTime(200, now);
+          rFilter.frequency.linearRampToValueAtTime(2800, now + 3.0);
+
+          rGain.gain.setValueAtTime(0.01, now);
+          rGain.gain.linearRampToValueAtTime(0.18, now + 2.8);
+          rGain.gain.exponentialRampToValueAtTime(0.001, now + 3.2);
+
+          rOsc.connect(rFilter);
+          rFilter.connect(rGain);
+          rGain.connect(this.musicGain);
+
+          rOsc.start(now);
+          rOsc.stop(now + 3.2);
+        } catch (e) {}
+      }
+
+      // Synchronized Heavy Sub-Bass Impact Drop at KARTIK GOYAL Reveal
+      playImpactDrop() {
+        this.initContext();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          // Deep sub-drop
+          const sub = this.ctx.createOscillator();
+          const subGain = this.ctx.createGain();
+          sub.type = 'sine';
+          sub.frequency.setValueAtTime(150, now);
+          sub.frequency.exponentialRampToValueAtTime(36, now + 1.6);
+
+          subGain.gain.setValueAtTime(0.65, now);
+          subGain.gain.exponentialRampToValueAtTime(0.001, now + 2.0);
+
+          // Impact transient noise
+          const bufferSize = this.ctx.sampleRate * 0.4;
+          const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.15));
+          }
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = buffer;
+          const nFilter = this.ctx.createBiquadFilter();
+          nFilter.type = 'lowpass';
+          nFilter.frequency.setValueAtTime(600, now);
+          nFilter.frequency.exponentialRampToValueAtTime(80, now + 0.35);
+
+          const nGain = this.ctx.createGain();
+          nGain.gain.setValueAtTime(0.35, now);
+          nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+
+          sub.connect(subGain);
+          subGain.connect(this.sfxGain);
+
+          noise.connect(nFilter);
+          nFilter.connect(nGain);
+          nGain.connect(this.sfxGain);
+
+          sub.start(now);
+          noise.start(now);
+          sub.stop(now + 2.0);
+        } catch (e) {}
+      }
+
+      // Smooth Fade Down into Ambient Mode (over 2.5s)
+      transitionToAmbient(duration = 2.5) {
+        if (!this.ctx) return;
+        this.mode = 'ambient';
+        const now = this.ctx.currentTime;
+        this.musicGain.gain.cancelScheduledValues(now);
+        this.musicGain.gain.setValueAtTime(this.musicGain.gain.value, now);
+        this.musicGain.gain.linearRampToValueAtTime(this.volume, now + duration);
+        this.updateUI();
+      }
+
+      // SFX: UI Click
+      playClick(freq = 800, duration = 0.04) {
+        this.initContext();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {}
+      }
+
+      // SFX: Flute / Bansuri Tone
+      playFluteTone(freq, duration = 0.8) {
+        this.initContext();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc1 = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const gain1 = this.ctx.createGain();
+          const gain2 = this.ctx.createGain();
+          const lfo = this.ctx.createOscillator();
+          const lfoGain = this.ctx.createGain();
+
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(freq, now);
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(freq * 2, now);
+
+          lfo.frequency.setValueAtTime(5.5, now);
+          lfoGain.gain.setValueAtTime(3.5, now);
+          lfo.connect(osc1.frequency);
+
+          gain1.gain.setValueAtTime(0.001, now);
+          gain1.gain.linearRampToValueAtTime(0.2, now + 0.08);
+          gain1.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+          gain2.gain.setValueAtTime(0.001, now);
+          gain2.gain.linearRampToValueAtTime(0.08, now + 0.08);
+          gain2.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+          osc1.connect(gain1);
+          osc2.connect(gain2);
+          gain1.connect(this.sfxGain);
+          gain2.connect(this.sfxGain);
+
+          lfo.start(now);
+          osc1.start(now);
+          osc2.start(now);
+          lfo.stop(now + duration);
+          osc1.stop(now + duration);
+          osc2.stop(now + duration);
+        } catch (e) {}
+      }
+
+      playSuccessChord() {
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          setTimeout(() => this.playClick(freq, 0.16), idx * 80);
+        });
+      }
+
+      // User Volume Control
+      setVolume(volPercent) {
+        this.volume = Math.max(0, Math.min(1, volPercent / 100));
+        try {
+          localStorage.setItem('portfolio_audio_vol', this.volume.toFixed(2));
+        } catch (e) {}
+        if (this.ctx && this.mode === 'ambient') {
+          this.musicGain.gain.cancelScheduledValues(this.ctx.currentTime);
+          this.musicGain.gain.linearRampToValueAtTime(this.volume, this.ctx.currentTime + 0.05);
+        }
+        this.updateUI();
+      }
+
+      // User Mute Toggle
+      toggleMute() {
+        this.initContext();
+        this.isMuted = !this.isMuted;
+        try {
+          localStorage.setItem('portfolio_audio_muted', this.isMuted ? 'true' : 'false');
+        } catch (e) {}
+        if (this.masterGain && this.ctx) {
+          this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+          this.masterGain.gain.linearRampToValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime + 0.05);
+        }
+        this.updateUI();
+        return this.isMuted;
+      }
+
+      // User Play / Pause Toggle
+      togglePlayPause() {
+        this.initContext();
+        if (this.isPlaying) {
+          this.isPlaying = false;
+          if (this.timerID) {
+            clearInterval(this.timerID);
+            this.timerID = null;
+          }
+          if (this.musicGain && this.ctx) {
+            this.musicGain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+          }
+        } else {
+          this.start(this.mode);
+        }
+        this.updateUI();
+      }
+
+      updateUI() {
+        const playIcon = document.getElementById('ctrl-icon-play');
+        const muteIcon = document.getElementById('ctrl-icon-mute');
+        const statusText = document.getElementById('ctrl-text-status');
+        const volSlider = document.getElementById('ctrl-slider-vol');
+        const topBarBtn = document.getElementById('audio-toggle');
+        const topBarStatus = document.getElementById('audio-status-text');
+
+        if (playIcon) playIcon.textContent = this.isPlaying ? '⏸' : '▶';
+        if (muteIcon) muteIcon.textContent = this.isMuted ? '🔇' : '🔊';
+        if (volSlider) volSlider.value = Math.round(this.volume * 100);
+
+        const currentVolPercent = Math.round(this.volume * 100);
+        if (statusText) {
+          if (this.isMuted) statusText.textContent = 'MUTED';
+          else if (!this.isPlaying) statusText.textContent = 'PAUSED';
+          else if (this.mode === 'intro') statusText.textContent = 'INTRO 70%';
+          else statusText.textContent = `AMBIENT ${currentVolPercent}%`;
+        }
+
+        if (topBarBtn && topBarStatus) {
+          if (this.isMuted || !this.isPlaying) {
+            topBarBtn.classList.remove('audio-active');
+            topBarStatus.textContent = 'AUDIO: OFF';
+          } else {
+            topBarBtn.classList.add('audio-active');
+            topBarStatus.textContent = 'AUDIO: ON';
+          }
+        }
+      }
+    }
+
+    const sound = new CinematicSoundtrackEngine();
+
+    // Floating Audio Controller Wire-Up & Mini Waveform Rendering
+    function initFloatingAudioController() {
+      const playBtn = document.getElementById('ctrl-btn-play');
+      const muteBtn = document.getElementById('ctrl-btn-mute');
+      const volSlider = document.getElementById('ctrl-slider-vol');
+      const miniCanvas = document.getElementById('mini-audio-canvas');
+      const miniCtx = miniCanvas ? miniCanvas.getContext('2d') : null;
+
+      if (playBtn) playBtn.addEventListener('click', () => sound.togglePlayPause());
+      if (muteBtn) muteBtn.addEventListener('click', () => sound.toggleMute());
+      if (volSlider) {
+        volSlider.addEventListener('input', (e) => sound.setVolume(parseFloat(e.target.value)));
+      }
+
+      // Link between top-bar audio button and controller
+      const topBarBtn = document.getElementById('audio-toggle');
+      if (topBarBtn) {
+        topBarBtn.addEventListener('click', () => {
+          sound.initContext();
+          if (!sound.isPlaying) sound.start('ambient');
+          else sound.toggleMute();
+        });
+      }
+
+      // Mini Reactive Canvas Waveform Loop
+      if (miniCtx && miniCanvas) {
+        function renderMiniWaveform() {
+          miniCtx.fillStyle = 'rgba(4, 4, 8, 0.4)';
+          miniCtx.fillRect(0, 0, miniCanvas.width, miniCanvas.height);
+
+          if (sound.analyser && sound.isPlaying && !sound.isMuted) {
+            const data = new Uint8Array(sound.analyser.frequencyBinCount);
+            sound.analyser.getByteTimeDomainData(data);
+
+            miniCtx.lineWidth = 1.8;
+            miniCtx.strokeStyle = '#00FF85';
+            miniCtx.shadowBlur = 6;
+            miniCtx.shadowColor = '#00FF85';
+            miniCtx.beginPath();
+
+            const step = Math.ceil(data.length / miniCanvas.width);
+            for (let x = 0; x < miniCanvas.width; x++) {
+              const v = (data[x * step] - 128) / 128;
+              const y = (miniCanvas.height / 2) + v * (miniCanvas.height * 0.45);
+              if (x === 0) miniCtx.moveTo(x, y);
+              else miniCtx.lineTo(x, y);
+            }
+            miniCtx.stroke();
+            miniCtx.shadowBlur = 0;
+          } else {
+            // Flat idle line
+            miniCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            miniCtx.lineWidth = 1;
+            miniCtx.beginPath();
+            miniCtx.moveTo(0, miniCanvas.height / 2);
+            miniCtx.lineTo(miniCanvas.width, miniCanvas.height / 2);
+            miniCtx.stroke();
+          }
+          requestAnimationFrame(renderMiniWaveform);
+        }
+        requestAnimationFrame(renderMiniWaveform);
+      }
+
+      // Auto-resume audio across page navigation on user interaction
+      const resumeIfActive = () => {
+        sound.initContext();
+        try {
+          if (sessionStorage.getItem('portfolio_audio_active') === 'true') {
+            sound.start('ambient');
+          }
+        } catch (e) {}
+      };
+      window.addEventListener('click', resumeIfActive, { once: true });
+      window.addEventListener('touchstart', resumeIfActive, { once: true });
+
+      // Save state before leaving page
+      window.addEventListener('beforeunload', () => {
+        try {
+          sessionStorage.setItem('portfolio_audio_active', sound.isPlaying ? 'true' : 'false');
+          sessionStorage.setItem('portfolio_music_step', sound.step);
+        } catch (e) {}
+      });
+
+      // Synchronize internal links
+      document.querySelectorAll('a[href*="thinking-lab.html"], a[href*="index.html"]').forEach(a => {
+        a.addEventListener('click', () => {
+          try {
+            sessionStorage.setItem('portfolio_audio_active', sound.isPlaying ? 'true' : 'false');
+            sessionStorage.setItem('portfolio_music_step', sound.step);
+          } catch (e) {}
+        });
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', initFloatingAudioController);
+
+
+    /* ==========================================================================
+       02. GLITCH COUNTDOWN INTRO & NAME-CLICK CONTROLLER
+       ========================================================================== */
+    class GlitchCountdownIntro {
+      constructor() {
+        this.overlay = document.getElementById('glitch-intro-overlay');
+        this.countdownStage = document.getElementById('countdown-stage');
+        this.countdownNum = document.getElementById('countdown-num');
+        this.nameStage = document.getElementById('intro-name-stage');
+        this.nameTrigger = document.getElementById('name-interactive-trigger');
+        this.skipBtn = document.getElementById('intro-skip-btn');
+        this.audioPrompt = document.getElementById('intro-audio-prompt');
+
+        this.dismissed = false;
+        this.audioStarted = false;
+        this.init();
+      }
+
+      init() {
+        if (!this.overlay) return;
+
+        // Check if intro was already experienced in this session
+        if (sessionStorage.getItem('kartik_intro_entered') === 'true') {
+          this.overlay.style.display = 'none';
+          document.body.classList.remove('intro-active');
+          sound.initContext();
+          if (sessionStorage.getItem('portfolio_audio_active') === 'true') {
+            sound.start('ambient');
+          }
+          return;
+        }
+
+        // Tap anywhere on screen to start audio
+        const activateIntroAudio = () => {
+          if (!this.audioStarted && !this.dismissed) {
+            this.audioStarted = true;
+            sound.start('intro');
+            sessionStorage.setItem('portfolio_audio_active', 'true');
+            if (this.audioPrompt) {
+              this.audioPrompt.style.opacity = '0';
+              setTimeout(() => { if (this.audioPrompt) this.audioPrompt.style.display = 'none'; }, 400);
+            }
+          }
+        };
+
+        window.addEventListener('click', activateIntroAudio);
+        window.addEventListener('touchstart', activateIntroAudio);
+        window.addEventListener('keydown', activateIntroAudio);
+
+        // Run countdown sequence: 3 -> 2 -> 1 -> 00
+        const sequence = [
+          { val: '3', delay: 0 },
+          { val: '2', delay: 750 },
+          { val: '1', delay: 1500 },
+          { val: '00', delay: 2250 }
+        ];
+
+        sequence.forEach(step => {
+          setTimeout(() => {
+            if (this.dismissed) return;
+            this.setNumber(step.val);
+            sound.playClick(step.val === '00' ? 1200 : 750, 0.05);
+          }, step.delay);
+        });
+
+        // Reveal Name after countdown with impact drop!
+        setTimeout(() => {
+          if (this.dismissed) return;
+          this.revealName();
+        }, 3050);
+
+        // Click Name to Enter
+        if (this.nameTrigger) {
+          const handleEnter = (e) => {
+            e.preventDefault();
+            this.enterPortfolio();
+          };
+          this.nameTrigger.addEventListener('click', handleEnter);
+          this.nameTrigger.addEventListener('touchend', handleEnter);
+        }
+
+        // Skip Intro Option
+        if (this.skipBtn) {
+          this.skipBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.dismissImmediate();
+          });
+        }
+      }
+
+      setNumber(val) {
+        if (!this.countdownNum) return;
+        this.countdownNum.classList.remove('active');
+        void this.countdownNum.offsetWidth; // Force reflow
+        this.countdownNum.textContent = val;
+        this.countdownNum.classList.add('active');
+      }
+
+      revealName() {
+        if (this.countdownStage) this.countdownStage.style.display = 'none';
+        if (this.nameStage) this.nameStage.classList.add('active');
+        // Synchronized heavy sub-bass impact drop!
+        sound.playImpactDrop();
+      }
+
+      enterPortfolio() {
+        if (this.dismissed) return;
+        this.dismissed = true;
+        sessionStorage.setItem('kartik_intro_entered', 'true');
+        sessionStorage.setItem('portfolio_audio_active', 'true');
+
+        sound.playClick(1400, 0.1);
+        // Smoothly fade music from intro high intensity down to ambient 14% over 2.5s
+        sound.transitionToAmbient(2.5);
+
+        if (this.nameTrigger) {
+          this.nameTrigger.style.transform = 'scale(1.08)';
+          this.nameTrigger.style.filter = 'drop-shadow(0 0 30px var(--rgb-green))';
+        }
+
+        setTimeout(() => {
+          if (this.overlay) this.overlay.classList.add('dismissed');
+          document.body.classList.remove('intro-active');
+
+          setTimeout(() => {
+            if (this.overlay) this.overlay.style.display = 'none';
+          }, 750);
+        }, 200);
+      }
+
+      dismissImmediate() {
+        this.dismissed = true;
+        sessionStorage.setItem('kartik_intro_entered', 'true');
+        sessionStorage.setItem('portfolio_audio_active', 'true');
+        sound.transitionToAmbient(1.5);
+
+        if (this.overlay) this.overlay.classList.add('dismissed');
+        document.body.classList.remove('intro-active');
+        setTimeout(() => {
+          if (this.overlay) this.overlay.style.display = 'none';
+        }, 400);
+      }
+    }
+
+    // Launch on DOM Ready
+    window.addEventListener('DOMContentLoaded', () => {
+      new GlitchCountdownIntro();
+    });
+
+
+    /* ==========================================================================
+       03. AMBIENT CURSOR & PARTICLES
+       ========================================================================== */
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
+    const ambientGlow = document.getElementById('ambient-glow');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (cursorDot) {
+        cursorDot.style.left = `${mouseX}px`;
+        cursorDot.style.top = `${mouseY}px`;
+      }
+      if (ambientGlow) {
+        ambientGlow.style.setProperty('--mouse-x', `${mouseX}px`);
+        ambientGlow.style.setProperty('--mouse-y', `${mouseY}px`);
+      }
+    });
+
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      if (cursorRing) {
+        cursorRing.style.left = `${ringX}px`;
+        cursorRing.style.top = `${ringY}px`;
+      }
+      requestAnimationFrame(renderCursor);
+    }
+    requestAnimationFrame(renderCursor);
+
+    // Interactive Hover Classes
+    document.querySelectorAll('a, button, input, .mind-node-btn, .swatch, .flute-hole-btn, .math-equation-row').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        document.body.classList.add('cursor-hover');
+        sound.playClick(1400, 0.02);
+      });
+      el.addEventListener('mouseleave', () => {
+        document.body.classList.remove('cursor-hover');
+      });
+      el.addEventListener('mousedown', () => {
+        document.body.classList.add('cursor-active');
+        sound.playClick(800, 0.03);
+      });
+      el.addEventListener('mouseup', () => {
+        document.body.classList.remove('cursor-active');
+      });
+    });
+
+    /* ==========================================================================
+       04. SCROLL PROGRESS & AUDIO TOGGLE
+       ========================================================================== */
+    const scrollProgressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (scrollProgressBar) {
+        scrollProgressBar.style.width = scrolled + '%';
+      }
+    });
+
+    const audioToggleBtn = document.getElementById('audio-toggle');
+    const audioStatusText = document.getElementById('audio-status-text');
+
+    if (audioToggleBtn) {
+      audioToggleBtn.addEventListener('click', () => {
+        const isAudioActive = sound.toggleAudio();
+        if (isAudioActive) {
+          audioToggleBtn.classList.add('audio-active');
+          audioStatusText.textContent = 'AUDIO: ON';
+          showToast('Interactive Audio Synthesizer Enabled');
+          sound.playSuccessChord();
+        } else {
+          audioToggleBtn.classList.remove('audio-active');
+          audioStatusText.textContent = 'AUDIO: OFF';
+          showToast('Interactive Audio Muted');
+        }
+      });
+    }
+
+    /* ==========================================================================
+       05. HERO 3D PARTICLE UNIVERSE CANVAS
+       ========================================================================== */
+    const heroCanvas = document.getElementById('hero-canvas');
+    let particles = [];
+    if (heroCanvas) {
+      const ctx = heroCanvas.getContext('2d');
+      let width, height;
+      const PARTICLE_COUNT = 90;
+
+      function resizeHeroCanvas() {
+        width = heroCanvas.width = heroCanvas.parentElement.offsetWidth;
+        height = heroCanvas.height = heroCanvas.parentElement.offsetHeight;
+      }
+      resizeHeroCanvas();
+      window.addEventListener('resize', resizeHeroCanvas);
+
+      class Particle3D {
+        constructor() {
+          this.init();
+        }
+        init() {
+          this.x = (Math.random() - 0.5) * width * 1.5;
+          this.y = (Math.random() - 0.5) * height * 1.5;
+          this.z = Math.random() * 800 + 100;
+          this.vx = (Math.random() - 0.5) * 0.4;
+          this.vy = (Math.random() - 0.5) * 0.4;
+          this.vz = -Math.random() * 1.2 - 0.2;
+          
+          const colors = ['#FF003C', '#00FF85', '#007BFF', '#FFFFFF'];
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+          this.baseRadius = Math.random() * 2 + 1;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.z += this.vz;
+
+          const dx = this.x - (mouseX - width / 2);
+          const dy = this.y - (mouseY - height / 2);
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            this.x += dx * 0.015;
+            this.y += dy * 0.015;
+          }
+
+          if (this.z <= 10) {
+            this.init();
+            this.z = 800;
+          }
+        }
+        draw() {
+          const fov = 350;
+          const scale = fov / this.z;
+          const px = this.x * scale + width / 2;
+          const py = this.y * scale + height / 2;
+          const radius = Math.max(0.6, this.baseRadius * scale);
+
+          if (px > 0 && px < width && py > 0 && py < height) {
+            ctx.beginPath();
+            ctx.arc(px, py, radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = this.color;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(new Particle3D());
+      }
+
+      function animateHeroUniverse() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateHeroUniverse);
+      }
+      requestAnimationFrame(animateHeroUniverse);
+    }
+
+    /* ==========================================================================
+       06. SECTION A: MIND CONSTELLATION INTERACTIVE MAP
+       ========================================================================== */
+    const mindData = {
+      math: {
+        title: "Pure Mathematics: The Supreme Tool",
+        body: "Mathematics is not arithmetic calculation; it is the art of rigorous abstraction. I love tackling problems that seem chaotic on the surface but collapse into elegant structures under modular arithmetic, combinatorics, or geometry.",
+        color: "var(--rgb-red)"
+      },
+      cs: {
+        title: "AI & Computing: First-Principles Systems",
+        body: "As a beginner, I deliberately avoid black-box hype. My goal is understanding the linear algebra of weights, the graph theory of algorithms, and the architecture of the Von Neumann bottleneck.",
+        color: "var(--rgb-blue)"
+      },
+      history: {
+        title: "History & Civics: The Dynamics of Civilization",
+        body: "History is human psychology unfolding through geography and institutional structures. Understanding constitutional law and geopolitical corridors gives context to every modern technological breakthrough.",
+        color: "var(--rgb-green)"
+      },
+      harmonics: {
+        title: "Acoustics & Voice: The Resonance of Reality",
+        body: "Sound is tangible physics. The overtone series of a bamboo flute and the modulation of human vocal folds demonstrate how discrete mathematical ratios create emotional beauty.",
+        color: "#E056FD"
+      }
+    };
+
+    const mindNodeBtns = document.querySelectorAll('.mind-node-btn');
+    const inspectorTitle = document.getElementById('inspector-title');
+    const inspectorBody = document.getElementById('inspector-body');
+
+    mindNodeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        mindNodeBtns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        const topic = btn.getAttribute('data-topic');
+        const data = mindData[topic];
+        if (data && inspectorTitle && inspectorBody) {
+          inspectorTitle.innerHTML = `<span style="color: ${data.color}">●</span> ${data.title}`;
+          inspectorBody.textContent = data.body;
+          sound.playClick(1000, 0.05);
+        }
+      });
+    });
+
+    /* ==========================================================================
+       08. SECTION C: INTERACTIVE CLI TERMINAL & COLOUR STUDIO
+       ========================================================================== */
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalOutput = document.getElementById('terminal-output');
+    const terminalBody = document.getElementById('terminal-body');
+
+    const cliCommands = {
+      help: "Available commands:\\n- whoami       : Profile dossier of Kartik Goyal\\n- nstru        : Current academic status & institution details\\n- skills       : List core technical & multidisciplinary proficiencies\\n- math         : Explore active mathematical research queries\\n- history      : Highlights of historical & geopolitical interests\\n- clear        : Clear the terminal display\\n- echo [msg]   : Echo arbitrary string\\n- theme [rgb]  : Flash system RGB border alert",
+      whoami: "Kartik Goyal | First-Year Undergraduate Student @ NST RU\\nCore Orientation: Relentless inquiry, mathematical problem solving, systems architecture.",
+      nstru: "NST RU (Academic Nexus)\\nStatus: 1st Year Undergraduate\\nMajor Focus: Mathematics, Computer Science, and Artificial Intelligence foundations.",
+      skills: "[FOUNDATIONAL SKILL MATRIX]\\n- CLI & Terminal Navigation [Daily Driver]\\n- Basic Systems Architecture & Machine Learning Foundations\\n- Sales Experience & Client Problem-Discovery\\n- Colour Theory & Spectral Harmonies\\n- Deep Interest in World History, Geography, and Civics",
+      math: "[ACTIVE MATHEMATICAL EXPLORATION]\\n- Diophantine Equations & Number Theory\\n- Chaotic Systems (Lorenz & Double Pendulum)\\n- Combinatorics & Graph Theory\\n- Currently solving: Discrete Probability & Modular Inverses.",
+      history: "[CIVILIZATION & GEOPOLITICS]\\n- Strategic maritime corridors: Malacca, Hormuz, Bab-el-Mandeb\\n- Constitutional architecture: Westminster vs Presidential models\\n- Economic historical cycles: The Silk Road & Industrial Revolutions",
+      clear: "__CLEAR__"
+    };
+
+    if (terminalInput) {
+      terminalInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const raw = terminalInput.value.trim();
+          if (!raw) return;
+
+          const cmdLine = document.createElement('div');
+          cmdLine.className = 'terminal-line';
+          cmdLine.innerHTML = `<span class=\"terminal-prompt\">kartik@nstru:~$</span> ${escapeHTML(raw)}`;
+          terminalOutput.appendChild(cmdLine);
+
+          const parts = raw.split(' ');
+          const cmd = parts[0].toLowerCase();
+          const arg = parts.slice(1).join(' ');
+
+          if (cmd === 'clear') {
+            terminalOutput.innerHTML = '';
+          } else if (cmd === 'echo') {
+            const resp = document.createElement('div');
+            resp.className = 'terminal-line';
+            resp.textContent = arg;
+            terminalOutput.appendChild(resp);
+          } else if (cliCommands[cmd]) {
+            const resp = document.createElement('div');
+            resp.className = 'terminal-line success';
+            resp.style.whiteSpace = 'pre-wrap';
+            resp.textContent = cliCommands[cmd];
+            terminalOutput.appendChild(resp);
+          } else {
+            const resp = document.createElement('div');
+            resp.className = 'terminal-line error';
+            resp.textContent = `zsh: command not found: ${cmd}. Type 'help' for available commands.`;
+            terminalOutput.appendChild(resp);
+          }
+
+          terminalInput.value = '';
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+          sound.playClick(1100, 0.03);
+        }
+      });
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Colour Theory Workbench
+    const colorStrip = document.getElementById('color-palette-strip');
+    const sliderHue = document.getElementById('slider-color-hue');
+    const valColorHue = document.getElementById('val-color-hue');
+
+    const palettes = {
+      triadic: ['#FF003C', '#00FF85', '#007BFF', '#0A0A0E', '#FFFFFF'],
+      analogous: ['#007BFF', '#00B4D8', '#00FF85', '#03045E', '#CAF0F8'],
+      complementary: ['#FF003C', '#00FFC8', '#140007', '#001A14', '#FFFFFF'],
+      cyber: ['#0D0D11', '#16161F', '#FF003C', '#00FF85', '#007BFF']
+    };
+
+    document.querySelectorAll('.color-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.color-mode-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const harmony = btn.getAttribute('data-harmony');
+        updatePaletteColors(palettes[harmony]);
+        sound.playClick(1000, 0.03);
+      });
+    });
+
+    function updatePaletteColors(colors) {
+      if (!colorStrip) return;
+      colorStrip.innerHTML = '';
+      colors.forEach(hex => {
+        const swatch = document.createElement('div');
+        swatch.className = 'swatch';
+        swatch.style.backgroundColor = hex;
+        swatch.setAttribute('data-hex', hex);
+        swatch.innerHTML = `<span>${hex}</span>`;
+        swatch.addEventListener('click', () => {
+          navigator.clipboard.writeText(hex);
+          showToast(`Copied Hex: ${hex} to clipboard!`);
+          sound.playClick(1200, 0.04);
+        });
+        colorStrip.appendChild(swatch);
+      });
+    }
+
+    /* ==========================================================================
+       09. SECTION D: ELEVATED RGB AUDIO WAVEFORM VISUALIZATION ENGINE
+       ========================================================================== */
+    const oscCanvas = document.getElementById('oscilloscope-canvas');
+    let oscCtx = oscCanvas ? oscCanvas.getContext('2d') : null;
+    let selectedWave = 'sine';
+    let synthFreq = 440;
+    let synthVib = 5.0;
+    let oscPhase = 0;
+
+    function resizeOsc() {
+      if (!oscCanvas) return;
+      oscCanvas.width = oscCanvas.offsetWidth;
+      oscCanvas.height = oscCanvas.offsetHeight;
+    }
+    resizeOsc();
+    window.addEventListener('resize', resizeOsc);
+
+    document.querySelectorAll('.wave-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.wave-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedWave = btn.getAttribute('data-wave');
+        sound.playClick(850, 0.03);
+      });
+    });
+
+    const sliderSynthFreq = document.getElementById('slider-synth-freq');
+    const sliderSynthVib = document.getElementById('slider-synth-vib');
+    const synthFreqVal = document.getElementById('synth-freq-val');
+    const synthVibVal = document.getElementById('synth-vib-val');
+    const waveformFreqPill = document.getElementById('waveform-freq-pill');
+
+    if (sliderSynthFreq) sliderSynthFreq.addEventListener('input', (e) => {
+      synthFreq = parseFloat(e.target.value);
+      if (synthFreqVal) synthFreqVal.textContent = `${synthFreq} Hz`;
+      if (waveformFreqPill) waveformFreqPill.textContent = `FREQ: ${synthFreq} HZ`;
+    });
+    if (sliderSynthVib) sliderSynthVib.addEventListener('input', (e) => {
+      synthVib = parseFloat(e.target.value);
+      if (synthVibVal) synthVibVal.textContent = `${synthVib.toFixed(1)} Hz`;
+    });
+
+    const btnPlayTone = document.getElementById('btn-play-tone');
+    if (btnPlayTone) {
+      btnPlayTone.addEventListener('click', () => {
+        sound.playFluteTone(synthFreq, 1.4);
+        showToast(`Synthesizing ${selectedWave.toUpperCase()} waveform @ ${synthFreq}Hz`);
+      });
+    }
+
+    const btnToggleMic = document.getElementById('btn-toggle-mic');
+    if (btnToggleMic) {
+      btnToggleMic.addEventListener('click', async () => {
+        sound.init();
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showToast('Microphone access unsupported on this browser.');
+          return;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const micSource = sound.ctx.createMediaStreamSource(stream);
+          micSource.connect(sound.analyser);
+          showToast('Microphone connected: Real-time RGB voice modulation active!');
+          btnToggleMic.innerHTML = "<span class='rgb-green'>MIC ACTIVE</span>";
+        } catch (err) {
+          showToast('Mic permission rejected. Synthetic generator active.');
+        }
+      });
+    }
+
+    // Professional Multi-Layered RGB Waveform Renderer
+    function renderRGBWaveform() {
+      if (!oscCtx || !oscCanvas) return;
+      const w = oscCanvas.width;
+      const h = oscCanvas.height;
+      const cy = h / 2;
+
+      // Dark background with fading trails
+      oscCtx.fillStyle = 'rgba(2, 2, 5, 0.28)';
+      oscCtx.fillRect(0, 0, w, h);
+
+      oscPhase += 0.055;
+
+      // Get real Web Audio analyser data if active
+      let freqData = null;
+      let timeData = null;
+      if (sound.analyser) {
+        freqData = new Uint8Array(sound.analyser.frequencyBinCount);
+        timeData = new Uint8Array(sound.analyser.frequencyBinCount);
+        sound.analyser.getByteFrequencyData(freqData);
+        sound.analyser.getByteTimeDomainData(timeData);
+      }
+
+      // 1. Draw Spectrum Equalizer Glow Bars in background
+      if (freqData) {
+        const barCount = 42;
+        const barWidth = w / barCount;
+        for (let b = 0; b < barCount; b++) {
+          const val = freqData[b * 3] || 15;
+          const barH = (val / 255) * (h * 0.45);
+          const bx = b * barWidth;
+          const by = h - barH;
+
+          const barGrad = oscCtx.createLinearGradient(0, by, 0, h);
+          barGrad.addColorStop(0, 'rgba(0, 255, 133, 0.35)');
+          barGrad.addColorStop(1, 'rgba(0, 123, 255, 0.04)');
+          oscCtx.fillStyle = barGrad;
+          oscCtx.fillRect(bx + 1, by, barWidth - 2, barH);
+        }
+      }
+
+      // 2. Draw Multi-Layer Chromatic RGB Waveform Traces
+      // Layer 1: Red Harmonics (#FF003C)
+      drawWaveTrace(oscCtx, w, h, cy, synthFreq, oscPhase - 0.25, selectedWave, '#FF003C', timeData, 1.15, -6);
+      // Layer 2: Green Resonance (#00FF85)
+      drawWaveTrace(oscCtx, w, h, cy, synthFreq, oscPhase + 0.18, selectedWave, '#00FF85', timeData, 1.05, 4);
+      // Layer 3: Master Blue Core (#007BFF) with White center
+      drawWaveTrace(oscCtx, w, h, cy, synthFreq, oscPhase, selectedWave, '#007BFF', timeData, 1.0, 0, true);
+
+      requestAnimationFrame(renderRGBWaveform);
+    }
+
+    function drawWaveTrace(ctx, w, h, cy, freq, phase, waveType, color, realData, freqMult, yOffset, isCore = false) {
+      ctx.beginPath();
+      ctx.lineWidth = isCore ? 3.0 : 1.8;
+      ctx.strokeStyle = color;
+      ctx.shadowBlur = isCore ? 16 : 8;
+      ctx.shadowColor = color;
+
+      for (let x = 0; x < w; x += 2) {
+        const t = (x / w) * Math.PI * 4;
+        let y = 0;
+
+        // If real audio data is streaming
+        if (realData && realData.length) {
+          const dataIdx = Math.floor((x / w) * realData.length);
+          const norm = (realData[dataIdx] - 128) / 128; // -1 to 1
+          y = norm * 1.2;
+        }
+
+        // Procedural synthetic harmonic modulation
+        if (waveType === 'sine') {
+          y += Math.sin(t * (freq / 90) * freqMult + phase);
+        } else if (waveType === 'triangle') {
+          y += (Math.asin(Math.sin(t * (freq / 90) * freqMult + phase))) * (2 / Math.PI);
+        } else if (waveType === 'square') {
+          y += Math.sin(t * (freq / 90) * freqMult + phase) >= 0 ? 0.9 : -0.9;
+        } else {
+          y += (((t * (freq / 90) * freqMult + phase) % (Math.PI * 2)) / Math.PI - 1);
+        }
+
+        // Subtle vibrato envelope
+        y *= (1 + Math.sin(phase * synthVib) * 0.18);
+
+        const py = cy + y * (h * 0.32) + yOffset;
+        if (x === 0) ctx.moveTo(x, py);
+        else ctx.lineTo(x, py);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    requestAnimationFrame(renderRGBWaveform);
+
+    // Flute Instrument Note Spawning
+    function spawnFluteNoteEffect(btn, noteName) {
+      const symbols = ['♪', '♫', '♬', '𝄢', '𝄡', '♩'];
+      const sym = symbols[Math.floor(Math.random() * symbols.length)];
+      const el = document.createElement('div');
+      el.className = 'floating-flute-note';
+      el.textContent = sym + " " + noteName;
+      const rect = btn.getBoundingClientRect();
+      el.style.left = (rect.left + rect.width / 2) + 'px';
+      el.style.top = rect.top + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1200);
+    }
+
+    const fluteHoleBtns = document.querySelectorAll('.flute-hole-btn');
+    fluteHoleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const freq = parseFloat(btn.getAttribute('data-freq'));
+        const note = btn.getAttribute('data-note');
+        sound.playFluteTone(freq, 0.9);
+        btn.classList.add('playing');
+        spawnFluteNoteEffect(btn, note);
+        setTimeout(() => btn.classList.remove('playing'), 400);
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      const keyMap = { '1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5, '7': 6 };
+      if (keyMap[e.key] !== undefined && fluteHoleBtns[keyMap[e.key]]) {
+        fluteHoleBtns[keyMap[e.key]].click();
+      }
+    });
+
+    /* ==========================================================================
+       10. SECTION E: STRATEGIC LOGIC & CHESS GEOMETRY ART SHOWCASE
+       ========================================================================== */
+    const chessArtBoardEl = document.getElementById('chess-art-board');
+    if (chessArtBoardEl) {
+      const PIECES = {
+        wK: '♔', wQ: '♕', wR: '♖', wB: '♗', wN: '♘', wP: '♙',
+        bK: '♚', bQ: '♛', bR: '♜', bB: '♝', bN: '♞', bP: '♟'
+      };
+
+      // Iconic turning point setup
+      const artBoardState = {
+        'e1': 'wK', 'g5': 'wN', 'h7': 'wQ', 'f1': 'wR', 'g2': 'wP', 'h2': 'wP',
+        'g8': 'bK', 'f7': 'bP', 'g7': 'bP', 'd8': 'bQ', 'a8': 'bR'
+      };
+
+      const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+      for (let r = 8; r >= 1; r--) {
+        for (let f = 0; f < 8; f++) {
+          const sqId = files[f] + r;
+          const isLight = (f + r) % 2 !== 0;
+          const sq = document.createElement('div');
+          sq.className = `chess-square ${isLight ? 'light' : 'dark'}`;
+          sq.id = `art-sq-${sqId}`;
+
+          // Highlight tactical breakthrough squares
+          if (sqId === 'h7' || sqId === 'h1' || sqId === 'g5') {
+            sq.style.boxShadow = 'inset 0 0 12px rgba(0, 255, 133, 0.6)';
+            sq.style.borderColor = 'rgba(0, 255, 133, 0.4)';
+          }
+
+          const pieceCode = artBoardState[sqId];
+          if (pieceCode) {
+            const pieceEl = document.createElement('span');
+            const isWhite = pieceCode.startsWith('w');
+            pieceEl.className = `chess-piece ${isWhite ? 'white' : 'black'}`;
+            pieceEl.textContent = PIECES[pieceCode] || '';
+            sq.appendChild(pieceEl);
+          }
+
+          chessArtBoardEl.appendChild(sq);
+        }
+      }
+    }
+
+    /* ==========================================================================
+       11. SECTION D: CRICKET KINEMATICS & AERODYNAMICS CANVAS
+       ========================================================================== */
+    const cricketCanvas = document.getElementById('cricket-canvas');
+    if (cricketCanvas) {
+      const cCtx = cricketCanvas.getContext('2d');
+      let cW, cH;
+      function resizeCricket() {
+        cW = cricketCanvas.width = cricketCanvas.offsetWidth;
+        cH = cricketCanvas.height = cricketCanvas.offsetHeight;
+      }
+      resizeCricket();
+      window.addEventListener('resize', resizeCricket);
+
+      let animT = 0;
+      function renderKinematics() {
+        cCtx.fillStyle = '#030805';
+        cCtx.fillRect(0, 0, cW, cH);
+
+        animT += 0.02;
+
+        // Pitch perspective lines
+        cCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        cCtx.lineWidth = 1;
+        cCtx.beginPath();
+        cCtx.moveTo(cW * 0.38, 20); cCtx.lineTo(cW * 0.32, cH - 20);
+        cCtx.moveTo(cW * 0.62, 20); cCtx.lineTo(cW * 0.68, cH - 20);
+        cCtx.stroke();
+
+        // Parabolic delivery trajectory
+        cCtx.beginPath();
+        cCtx.strokeStyle = '#00FF85';
+        cCtx.lineWidth = 2.5;
+        cCtx.shadowBlur = 10;
+        cCtx.shadowColor = '#00FF85';
+
+        const pitchPoint = cH * 0.68;
+        cCtx.moveTo(cW * 0.5, 30);
+        cCtx.quadraticCurveTo(cW * 0.46, pitchPoint * 0.7, cW * 0.48, pitchPoint);
+        cCtx.lineTo(cW * 0.62, cH - 30); // Deviation after pitch
+        cCtx.stroke();
+        cCtx.shadowBlur = 0;
+
+        // Aerodynamic Streamlines (Magnus effect)
+        cCtx.strokeStyle = 'rgba(0, 123, 255, 0.45)';
+        cCtx.lineWidth = 1;
+        for (let i = 0; i < 5; i++) {
+          const off = i * 8;
+          cCtx.beginPath();
+          cCtx.moveTo(cW * 0.5 + off, 40);
+          cCtx.quadraticCurveTo(cW * 0.42 + off, pitchPoint * 0.6, cW * 0.45 + off, pitchPoint - 20);
+          cCtx.stroke();
+        }
+
+        // Animated Ball along trajectory
+        const ballProg = (Math.sin(animT) + 1) / 2;
+        let bx, by;
+        if (ballProg < 0.7) {
+          const p = ballProg / 0.7;
+          bx = (1 - p) * (1 - p) * (cW * 0.5) + 2 * (1 - p) * p * (cW * 0.46) + p * p * (cW * 0.48);
+          by = 30 + p * (pitchPoint - 30);
+        } else {
+          const p = (ballProg - 0.7) / 0.3;
+          bx = (1 - p) * (cW * 0.48) + p * (cW * 0.62);
+          by = pitchPoint + p * (cH - 30 - pitchPoint);
+        }
+
+        cCtx.fillStyle = '#FF003C';
+        cCtx.shadowBlur = 12;
+        cCtx.shadowColor = '#FF003C';
+        cCtx.beginPath();
+        cCtx.arc(bx, by, 7 * (0.5 + ballProg * 0.8), 0, Math.PI * 2);
+        cCtx.fill();
+        cCtx.shadowBlur = 0;
+
+        requestAnimationFrame(renderKinematics);
+      }
+      requestAnimationFrame(renderKinematics);
+    }
+
+    // Hobby Tab Switching
+    const hobbyTabBtns = document.querySelectorAll('.hobby-tab-btn');
+    const hobbyPanels = document.querySelectorAll('.hobby-panel');
+
+    hobbyTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        hobbyTabBtns.forEach(b => b.classList.remove('active'));
+        hobbyPanels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.getAttribute('data-tab');
+        const activePanel = document.getElementById(`panel-${target}`);
+        if (activePanel) activePanel.classList.add('active');
+        sound.playClick(950, 0.04);
+      });
+    });
+
+    /* ==========================================================================
+       12. SECTION F: IDENTITY, FORM SUBMISSION, CLOCK & TOAST
+       ========================================================================== */
+    const copyEmailCard = document.getElementById('copy-email-card');
+    if (copyEmailCard) {
+      copyEmailCard.addEventListener('click', () => {
+        const email = copyEmailCard.getAttribute('data-copy');
+        navigator.clipboard.writeText(email);
+        showToast(`Copied ${email} to clipboard!`);
+        sound.playSuccessChord();
+      });
+    }
+
+    const transmissionForm = document.getElementById('transmission-form');
+    if (transmissionForm) {
+      transmissionForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('sender-name').value;
+        showToast(`Transmission broadcast from ${name}! Encryption verified.`);
+        sound.playSuccessChord();
+        transmissionForm.reset();
+      });
+    }
+
+    // Live UTC Clock
+    function updateFooterClock() {
+      const clockEl = document.getElementById('footer-utc-clock');
+      if (clockEl) {
+        const now = new Date();
+        const utcStr = now.toUTCString().split(' ')[4];
+        clockEl.textContent = `UTC ${utcStr}`;
+      }
+    }
+    setInterval(updateFooterClock, 1000);
+    updateFooterClock();
+
+    // Toast Notification Dispatcher
+    const toast = document.getElementById('toast-msg');
+    const toastText = document.getElementById('toast-text');
+    let toastTimeout;
+
+    function showToast(msg) {
+      if (!toast || !toastText) return;
+      toastText.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // Magnetic Buttons Physics
+    document.querySelectorAll('.btn, .btn-gta-enter').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.18}px, ${y * 0.18}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  </script>
+
+  <!-- Floating RGB Audio Controller -->
+  <div id="floating-audio-ctrl" class="floating-audio-ctrl" aria-label="Audio Controls">
+    <div class="mini-waveform-box">
+      <canvas id="mini-audio-canvas" class="mini-audio-canvas" width="64" height="22"></canvas>
+    </div>
+
+    <button id="ctrl-btn-play" class="audio-ctrl-btn" title="Play / Pause Soundtrack" aria-label="Toggle Play Pause">
+      <span id="ctrl-icon-play">⏸</span>
+    </button>
+
+    <button id="ctrl-btn-mute" class="audio-ctrl-btn" title="Mute / Unmute" aria-label="Toggle Mute">
+      <span id="ctrl-icon-mute">🔊</span>
+    </button>
+
+    <div class="audio-ctrl-vol-wrap">
+      <input type="range" id="ctrl-slider-vol" min="0" max="100" value="14" class="audio-vol-slider" title="Music Volume">
+    </div>
+
+    <span id="ctrl-text-status" class="audio-ctrl-status">AMBIENT 14%</span>
+  </div>
+
+</body>
+</html>
